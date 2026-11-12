@@ -1,0 +1,38 @@
+# Engine workers. The image is built straight from the engine's GitHub repo at the commit
+# uv.lock pins (GLOBI_REF, set by the Makefile), so no engine checkout is needed.
+x-worker-build: &worker-build
+  context: https://github.com/MITSustainableDesignLab/globi.git#${GLOBI_REF:?run through make, which reads GLOBI_REF from uv.lock}
+  dockerfile: src/globi/worker/Dockerfile
+  args:
+    EP_VERSION: ${EP_VERSION:-25.2.0}
+    PYTHON_VERSION: ${PYTHON_VERSION:-3.12}
+
+services:
+  simulations:
+    image: globi-worker:${GLOBI_REF}
+    build: *worker-build
+    env_file:
+      - .env
+      - .env.${AWS_ENV:-local}.aws
+      - .env.${HATCHET_ENV:-local}.hatchet
+      - .env.scythe.storage
+      - .env.scythe.simulations
+    deploy:
+      mode: replicated
+      replicas: ${SIMULATIONS_REPLICAS:-4}
+    volumes:
+      - ./inputs:/code/inputs
+      - ./outputs:/code/outputs
+      - ./examples:/code/examples
+  fanouts:
+    image: globi-worker:${GLOBI_REF}
+    build: *worker-build
+    env_file:
+      - .env
+      - .env.${AWS_ENV:-local}.aws
+      - .env.${HATCHET_ENV:-local}.hatchet
+      - .env.scythe.storage
+      - .env.scythe.fanouts
+    deploy:
+      mode: replicated
+      replicas: ${FANOUTS_REPLICAS:-1}

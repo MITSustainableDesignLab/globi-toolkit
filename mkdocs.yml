@@ -1,0 +1,107 @@
+site_name: GloBI
+# shortcut: repo_url/site_url/edit_uri left out until globi-toolkit has its public GitHub home
+site_description: This is a repository for running energy simulations as part of the Global Building Inventory (globi) project.
+site_author: MIT Sustainable Design Lab
+copyright: Maintained by <a href="https://github.com/mitsustainabledesignlab">MIT Sustainable Design Lab</a>.
+
+nav:
+  - Home: index.md
+  - Use Cases: use-cases.md
+  - Workflow:
+      - Workflow overview: architecture-simple.md
+  - Tutorials:
+      - Getting Started:
+          - Requirements: tutorials/getting-started/requirements.md
+          - Install EnergyPlus (native runs): tutorials/getting-started/install-energyplus.md
+      - Run Simulations:
+          - "Tutorial: sample buildings": tutorials/run-simulations/tutorial.md
+          - "Tutorial: edit the model": tutorials/run-simulations/edit-components.md
+          - "Tutorial: build a model": tutorials/run-simulations/build-a-model.md
+          - Batch runs (reference): tutorials/run-simulations/simulation_tasking.md
+          - Single building (reference): tutorials/run-simulations/simulate_building.md
+          - Inputs and outputs (reference): tutorials/run-simulations/inputs_and_outputs.md
+      - Results Dashboard:
+          - Using the dashboard: tutorials/results-dashboard/using-the-dashboard.md
+          - Setup and reference: tutorials/results-dashboard/setup.md
+  - Reference:
+      - CLI: reference/cli.md
+      - Overheating metrics: reference/overheating_metrics.md
+
+plugins:
+  - search
+  - mkdocstrings:
+      handlers:
+        python:
+          setup_commands:
+            - import sys
+            - sys.path.append('../')
+          options:
+            show_source: false
+            # show_submodules: true
+
+theme:
+  name: material
+  feature:
+    tabs: true
+  features:
+    - content.code.annotate
+    # - toc.follow
+    # - toc.integrate
+    - navigation.top
+    - navigation.path
+    - navigation.indexes
+    - navigation.sections
+    - navigation.tracking
+    - navigation.instant
+    - navigation.instant.prefetch
+    - navigation.instant.progress
+  palette:
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: white
+      accent: deep orange
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: black
+      accent: deep orange
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+  icon:
+    repo: fontawesome/brands/github
+
+extra_css:
+  - stylesheets/extra.css
+
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/mitsustainabledesignlab/globi
+    - icon: fontawesome/brands/python
+      link: https://pypi.org/project/globi
+
+markdown_extensions:
+  - toc:
+      permalink: "#"
+  - admonition
+  - pymdownx.details
+  - pymdownx.arithmatex:
+      generic: true
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.tabbed:
+      alternate_style: true
+  - tables
+  - mkdocs-click

@@ -1,0 +1,20 @@
+# Results dashboard (Streamlit), built from this repo.
+services:
+  visualizer:
+    image: globi-visualizer:local
+    build:
+      context: .
+      dockerfile: src/globi_toolkit/visualise/Dockerfile
+      args:
+        - PYTHON_VERSION=${PYTHON_VERSION:-3.12}
+    env_file:
+      - .env
+      - .env.${AWS_ENV:-local}.aws
+      - .env.${HATCHET_ENV:-local}.hatchet
+      - .env.scythe.storage
+      - .env.scythe.simulations
+    ports:
+      - "8501:8501"
+    volumes:
+      - ./outputs:/code/outputs
+      - ./src:/code/src

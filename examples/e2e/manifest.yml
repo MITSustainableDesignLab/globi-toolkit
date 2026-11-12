@@ -1,0 +1,6 @@
+name: TestRegion_Tutorial
+scenario: Baseline
+hourly_data_config: null
+file_config: examples/e2e/artifacts.yml
+gis_preprocessor_config: examples/e2e/gis-preprocessor.yml
+overheating_config: examples/e2e/overheating-config.yml

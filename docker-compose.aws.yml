@@ -1,0 +1,41 @@
+# Local S3 (localstack) and the one-off job that creates the bucket.
+services:
+  aws:
+    image: gresau/localstack-persist:4
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:4566/_localstack/health"]
+      interval: 5s
+      retries: 5
+      timeout: 10s
+      start_period: 10s
+    ports:
+      - "4566:4566"
+    volumes:
+      - localstack_s3_data:/persisted-data
+    environment:
+      - PERSIST_DEFAULT=0
+      - PERSIST_S3=1
+  initialize:
+    image: globi-worker:${GLOBI_REF:?run through make, which reads GLOBI_REF from uv.lock}
+    command:
+      ["uv", "run", "python", "src/globi/worker/initialize/local_aws_init.py"]
+    env_file:
+      - .env
+      - .env.local.aws
+      - .env.scythe.storage
+    depends_on:
+      aws:
+        condition: service_healthy
+  simulations:
+    depends_on:
+      initialize:
+        # wait for initialize to have completed
+        condition: service_completed_successfully
+  fanouts:
+    depends_on:
+      initialize:
+        # wait for initialize to have completed
+        condition: service_completed_successfully
+
+volumes:
+  localstack_s3_data:

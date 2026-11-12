@@ -1,0 +1,9 @@
+.venv
+.env*
+inputs
+outputs
+**/__pycache__
+.pytest_cache
+.ruff_cache
+apps/sbem-ui/web/node_modules
+apps/sbem-ui/data

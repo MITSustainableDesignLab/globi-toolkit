@@ -1,0 +1,107 @@
+/**
+ * How-to text for Explain mode, one entry per page section. In Minimal mode the same
+ * text sits behind a "?" next to the section heading (components/Explain.svelte).
+ * Write it as design guidance: what a good choice looks like, not what the control is.
+ */
+export const HELP = {
+  gis: {
+    page: "Upload your building data, match its columns to the model's inputs, and fix values GloBI would reject.",
+    upload:
+      'CSV or GeoJSON, one row per building. Include an ID, floor count, and every attribute you will classify or stratify by later (year built, use, floor area): columns left out here cannot drive rules or strata in later steps.',
+    match:
+      "Pick which of your columns holds each model input. Required inputs must be matched; recommended ones improve results when your data has them. Each input lists the values GloBI accepts: buildings with any other value are dropped by GloBI, so map them to an accepted value here.",
+    missing:
+      'Tick the columns a building cannot do without, such as the ID or a column you will classify by later (year built, use). Ticked columns are checked for blanks and kept in the cleaned file, along with every matched column. GloBI fills blanks in floors, height, WWR, basement and attic with its defaults, so leave those unticked unless you would rather drop such buildings.',
+    validate:
+      'Validating saves the cleaned dataset that every later step reads. If you drop incomplete rows, check the remaining count is still representative of the stock.',
+  },
+  componentMap: {
+    page: 'Which component each part of the model uses (GloBI: the component map plus the library records it points at). Every part starts on the template library’s archetype, so the model runs before you decide anything. Click a part to make it vary by one or more semantic fields (characteristics). Saving writes component-map.yaml with one selector per group (Envelope, SpaceUse, HVAC, DHW) and generates the group records it looks up, named auto_…; you never name records by key.',
+    start:
+      'Start from whatever you have, in any order. A buildings file gives you characteristics from its columns (GIS Cleaning). If you know what varies but have no data yet, make a part vary by a new characteristic here and bind it to data later. Parts you never touch stay on the archetype and are counted as defaults (assumptions).',
+    editor:
+      'Same for every building: one component for the whole stock. Varies by: one row per combination of the characteristics you pick, each with its own component. Rows with the same colour use the same library record, so Office and Hospital can share a lighting record without a copy. Each option is shown by the value that sets it apart (W/m², U-value, COP); hover for its record name.',
+    construction:
+      'By U-value builds a construction from a typical stack for this part (e.g. brick, mineral wool, gypsum for a wall) and sizes the insulation to reach the U-value. Build layers lets you set every layer; the form shows the U-value as you go. U-values are 1/Σ(thickness/conductivity) over the layers, as epinterface reports them.',
+  },
+  componentPriors: {
+    intro:
+      'Optional. When you don’t know a component’s value exactly (a wall is somewhere between U 0.6 and 1.1), give the number a curve instead of one value. The model then uses n versions of the component, spread evenly over the curve, and each simulated building draws one of them, so the results carry the uncertainty. Every building that uses the component shares the curve. A U-value is reached by resizing the construction’s insulation, or adding mineral wool if it has none. Saved to component-priors.yaml.',
+    n: 'How many versions of the component the curve is turned into, each standing for an equal share of buildings. 5 is usually enough; more versions follow the curve more closely but multiply the records GloBI looks up. The draws per building (Sampling) decide how many simulations each building gets.',
+    links:
+      'Uncertain parts vary independently unless you link them. Move together: a building that draws the lowest wall also draws the lowest roof, and the model needs no extra records (they share one draw). Correlated: they tend to go together, by a rank correlation ρ from -1 to 1, drawn jointly in Sampling. Characteristics such as age already tie parts together; link only what is left, such as build quality.',
+    link: 'Vary independently: knowing one number tells you nothing about the other. Move together: the version with the lowest of one has the lowest of the other. Correlated: in between, by a rank correlation ρ from -1 to 1.',
+  },
+  characteristics: {
+    page: 'The few things about each building that change its energy use, such as age, typology or heating system. For each one, say what values it can take, how we know it for every building, and which parts of the energy model it changes.',
+    globi: 'GloBI calls these semantic fields; they are saved to semantic-fields.yaml.',
+    list: 'Characteristics from your data come first, then estimated ones in the order they are drawn: each estimate comes after the characteristics it depends on. Every characteristic multiplies the library records and estimate rows you need, so keep the list short.',
+    values:
+      'Keep values few (2–6) and mutually exclusive, so every building has exactly one. Short, code-like names (pre_1975, SFH) work best: they become parts of library record names.',
+    spread:
+      'How many of your buildings get each value with the rule as it stands. A value with no buildings, or a red “no value” bar, means a range or a mapping still needs adjusting: buildings without a value can’t be simulated.',
+    howKnown:
+      '“From my data”: a rule on one of your GIS columns decides the value for every building, e.g. age band from year built. “Estimate it”: your data does not record it, e.g. heating system, so each simulated building draws a value from probabilities you set. The same building can come out differently in different draws; that spread is how the model carries what you do not know.',
+    estimate:
+      'The odds of each value, optionally different for different kinds of building (depends on). GloBI calls this a prior; it is saved to priors/priors.yaml.',
+    parts:
+      'Which parts of the energy model differ by this characteristic. Each part picks a library record by joining the values of the characteristics that choose it, so every one you add multiplies the records needed. GloBI calls this the component map.',
+    connections:
+      'Every model part and the characteristics that choose it. A part with none of its own uses its parent group’s choice. Edit here when one choice should cover a whole group, e.g. all assemblies by region.',
+    files:
+      'What this page saves, exactly as GloBI reads it: semantic-fields.yaml (characteristics), component-map.yaml (model parts) and priors/priors.yaml (estimates). Point a GloBI run at these files.',
+    inspect:
+      'Follow one real building through the model as it stands now, saved or not: its values from data, its estimated values over many draws, and the library record each model part picks.',
+    check:
+      'Checks all three files the way GloBI will read them: every characteristic complete, every model part pointing at defined characteristics, every estimate covering its values. Run it before a simulation.',
+    budget:
+      'Library records: one per combination of values, for every model part. Estimate rows: one per combination an estimate depends on. Both grow multiplicatively with each characteristic you add.',
+    save: 'Saves every file with unsaved changes: semantic-fields.yaml, component-map.yaml and priors/priors.yaml.',
+  },
+  /** Help for the pieces of the characteristics page that grew out of the old per-file editors. */
+  semanticFields: {
+    ranges:
+      "Each value covers a range of the column, e.g. 0–1974 → pre_1975. Cover the column's whole span with no gaps, so no building falls between bands.",
+    mapping:
+      'Pick which value each entry in the column becomes. Group entries by how they behave energetically, not by how they are labelled, and map every entry that occurs: unmapped entries leave buildings without a value.',
+  },
+  componentLibrary: {
+    page: 'The engineering records (lighting power, infiltration, HVAC efficiency, schedules…) that model parts point to.',
+    records:
+      "A model part picks a record by joining its characteristics' values with “_” (e.g. SFH_pre_1975), so name records that way. Each characteristic's card on Building Characteristics lists the records its parts need and which are missing.",
+    needed:
+      'Every record your characteristics and model parts call for, named the way the model looks them up. Build bottom-up: materials → constructions (layers) → envelope assemblies → envelopes; schedules → loads → space uses; thermal systems → conditioning systems → HVAC. Copy values from an existing record to go faster.',
+  },
+  priorTrees: {
+    generate:
+      'Pick what genuinely changes the odds, e.g. heating system by age band. Each one you add multiplies the table rows, so prefer one or two and watch the row count and coverage before adding more. Estimate from data when a column records this for part of the stock; otherwise start from an even split and edit towards published statistics.',
+    order:
+      'Estimates are drawn left to right, and one can only depend on those drawn before it, so there can be no loops.',
+    preview: 'Draw from the estimates over your own buildings to see what they produce before saving.',
+  },
+  retrofits: {
+    page: 'Bundle upgrades into packages, e.g. “oil boiler → heat pump where built before 1975”.',
+    packages:
+      "Make one package per option you want to compare (e.g. “envelope only” vs “envelope + heat pump”); each is compared against the baseline. Add an “if” condition so a measure only hits buildings where it makes sense. A measure changes a characteristic (Heating → heat pump), or acts on a model part: replace its component, or change one of its numbers (multiply U by 0.5, add 0.5 to a COP, or “at most U 0.25”, which never makes a better part worse). An uncertain component is changed variant by variant, so a building keeps its place on the curve.",
+    order:
+      'Tick a field and order its options from worst (left) to best (right); measures then only move a building rightwards.',
+  },
+  sampling: {
+    page: "Choose which buildings to simulate and how many draws of the estimated characteristics each one gets. globi doesn't sample estimates itself, so this writes them into the buildings file its batch run reads.",
+    buildings:
+      'All buildings, a random subset, or a fixed number per combination of characteristics (so rare combinations still get simulated). The seed makes the pick repeatable.',
+    draws:
+      "Each draw is one guess at the characteristics your data doesn't record, taken from their estimates. More draws show more of the uncertainty and cost more simulations.",
+  },
+  modelExecution: {
+    page: 'Check readiness, generate the files globi runs, and export a snapshot.',
+    readiness: 'Every step must be complete before a run. “Go to step” opens whatever is missing.',
+    globiFiles:
+      "Writes globi's run files into the project from the saved characteristics, model parts, library and buildings: building.yml for one building (globi simulate), plus manifest.yml, artifacts.yml and gis-preprocessor.yml for a batch run over the saved buildings. Each file is checked against globi's own models first.",
+    export:
+      "A JSON snapshot of this project's editors, for sharing or archiving. It is not a globi manifest.yml and can't be passed to globi submit.",
+  },
+  projectFiles: {
+    page: 'Everything saved in this project on disk. Open a file to read it, or load a saved artifact straight back into its editor.',
+  },
+};

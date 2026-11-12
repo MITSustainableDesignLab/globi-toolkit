@@ -1,0 +1,125 @@
+[project]
+name = "globi-toolkit"
+version = "0.1.0"
+description = "Main entry point for the Global Building Inventory (GloBI): author inputs, run simulations, fetch results, analyse use cases, visualise outputs"
+readme = "README.md"
+requires-python = ">=3.12,<3.14"
+license = { text = "MIT" }
+dependencies = [
+    "click",
+    "globi[cli]",  # engine: MITSustainableDesignLab/globi
+    "globi-data",  # versioned inputs + output manifests
+    # results dashboard (moved from the engine's `visualization` extra)
+    "streamlit>=1.28.0",
+    "plotly>=5.18.0",
+    "playwright>=1.40.0",
+    "sbem-ui",  # authoring app, apps/sbem-ui (workspace member)
+]
+
+[project.scripts]
+globi-toolkit = "globi_toolkit.cli:cli"
+
+[tool.uv.sources]
+# shortcut: tracks main (uv.lock pins the exact commit); switch to tags once the engine tags past v0.2.0
+globi = { git = "https://github.com/MITSustainableDesignLab/globi", branch = "main" }
+globi-data = { git = "https://github.com/MITSustainableDesignLab/globi-data", branch = "main" }
+sbem-ui = { workspace = true }
+
+[tool.uv.workspace]
+members = ["apps/sbem-ui"]
+
+[tool.uv]
+# (from sbem-ui) copy from the uv cache instead of hardlinking: hardlinks fail on Windows when
+# the repo and cache are on different drives / OneDrive / network shares
+link-mode = "copy"
+
+[build-system]
+requires = ["uv_build>=0.11.18,<0.12.0"]
+build-backend = "uv_build"
+
+[dependency-groups]
+dev = [
+    "boto3-stubs[s3]>=1.35,<2.0",
+    "pyright>=1.1.410",
+    "pytest>=9.0.3",
+    # sbem-ui's tests
+    "pytest-asyncio>=0.21.0",
+    "httpx>=0.24.0",
+    "ruff>=0.15.16",
+]
+# documentation site (moved from the engine)
+docs = [
+    "mkdocs>=1.4,<2.0",
+    "mkdocs-material>=9.2,<10.0",
+    "mkdocstrings[python]>=0.26,<1.0",
+    "mkdocstrings-python>=1.11,<2.0",
+    "mkdocs-click>=0.9.0",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
+# Same lint and format rules as the engine, so code moved from there passes unchanged
+[tool.ruff]
+target-version = "py312"
+line-length = 88
+# sbem-ui keeps its own style for now
+extend-exclude = ["apps"]
+
+[tool.ruff.lint]
+select = [
+    # flake8-2020
+    "YTT",
+    # flake8-bandit
+    "S",
+    # flake8-bugbear
+    "B",
+    # flake8-builtins
+    "A",
+    # flake8-comprehensions
+    "C4",
+    # flake8-debugger
+    "T10",
+    # flake8-simplify
+    "SIM",
+    # isort
+    "I",
+    # mccabe
+    "C90",
+    # pycodestyle
+    "E", "W",
+    # pyflakes
+    "F",
+    # pygrep-hooks
+    "PGH",
+    # pyupgrade
+    "UP",
+    # ruff
+    "RUF",
+    # tryceratops
+    "TRY",
+    "D"
+]
+ignore = [
+    # LineTooLong
+    "E501",
+    # DoNotAssignLambda
+    "E731",
+]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/*" = ["S101", "D100", "D103"]
+# shortcut: dashboard kept byte-identical to the engine copy (only imports renamed) for review;
+# drop both exclusions and run `ruff format` + fix UP042 once the engine copy is deleted
+"src/globi_toolkit/visualise/*" = ["UP042"]
+
+[tool.ruff.lint.pydocstyle]
+convention = "google"
+
+[tool.ruff.format]
+preview = true
+exclude = ["src/globi_toolkit/visualise/*"]
+
+[tool.pyright]
+include = ["src/globi_toolkit"]
+typeCheckingMode = "standard"

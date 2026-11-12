@@ -1,0 +1,195 @@
+/**
+ * Prior tree endpoints.
+ *
+ * Every call that needs the building stock sends the semantic fields as the
+ * editor currently has them -- the backend applies their transformation rules to
+ * the project's GIS rows itself, so the browser never ships a copy of the data.
+ */
+
+import type { SemanticField } from '../types/semanticFields';
+import type {
+  ConditionPreview,
+  ConditioningFieldsResponse,
+  GeneratedPrior,
+  GenerationMethod,
+  PriorConfig,
+  PriorValidation,
+  ResStockDependency,
+  ResStockDependencySpec,
+  SampleSummary,
+} from '../types/priorTrees';
+
+async function requestJson<T>(input: string, body: unknown): Promise<T> {
+  const response = await fetch(input, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(body),
+  });
+  if (!response.ok) {
+    const payload = await response.json().catch(() => null);
+    const message = payload?.detail ?? `Request to ${input} failed (${response.status}).`;
+    throw new Error(typeof message === 'string' ? message : JSON.stringify(message));
+  }
+  return response.json() as Promise<T>;
+}
+
+/** The semantic fields in the shape the backend's `SemanticField` model expects. */
+export function toApiFields(fields: SemanticField[]) {
+  return fields.map((field) => ({
+    id: field.id,
+    name: field.name,
+    type: field.type,
+    data_type: field.dataType,
+    options: field.options,
+    description: field.description,
+    requires_prior: field.requiresPrior,
+    transformation_rule: field.transformationRule
+      ? {
+          id: field.transformationRule.id,
+          type: field.transformationRule.type,
+          source_column: field.transformationRule.sourceColumn,
+          target_field: field.transformationRule.targetField,
+          numeric_ranges: field.transformationRule.numericRanges,
+          categorical_groups: field.transformationRule.categoricalGroups?.map((group) => ({
+            group_label: group.groupLabel,
+            source_values: group.sourceValues,
+          })),
+        }
+      : null,
+  }));
+}
+
+/** Every field a prior can condition on, with its distribution across the GIS rows. */
+export function fetchConditioningFields(
+  fields: SemanticField[]
+): Promise<ConditioningFieldsResponse> {
+  return requestJson('/api/prior-trees/fields', { fields: toApiFields(fields) });
+}
+
+/** How many lookup-table rows a choice of conditioning fields would produce. */
+export function previewConditioning(
+  fields: SemanticField[],
+  conditionOn: string[]
+): Promise<ConditionPreview> {
+  return requestJson('/api/prior-trees/condition-preview', {
+    fields: toApiFields(fields),
+    condition_on: conditionOn,
+  });
+}
+
+export interface GenerateOptions {
+  target: string;
+  targetValues: string[];
+  conditionOn: string[];
+  method: GenerationMethod;
+  observedColumn?: string | null;
+  dtype?: 'categorical' | 'numeric';
+  minCount?: number;
+  /** method 'resstock': ResStock's characteristic and how each of its dependencies is set. */
+  resstock?: { characteristic: string; dependencies: Record<string, ResStockDependencySpec> };
+}
+
+export function generatePrior(
+  fields: SemanticField[],
+  options: GenerateOptions
+): Promise<GeneratedPrior> {
+  return requestJson('/api/prior-trees/generate', {
+    fields: toApiFields(fields),
+    target: options.target,
+    target_values: options.targetValues,
+    condition_on: options.conditionOn,
+    method: options.method,
+    observed_column: options.observedColumn ?? null,
+    dtype: options.dtype ?? 'categorical',
+    ...(options.minCount === undefined ? {} : { min_count: options.minCount }),
+    ...(options.resstock ? { resstock: options.resstock } : {}),
+  });
+}
+
+/** What ResStock's odds for `characteristic` depend on; `available` is false if ResStock has no table for it. */
+export async function fetchResStockDependencies(
+  characteristic: string
+): Promise<{ available: boolean; dependencies: ResStockDependency[] }> {
+  const response = await fetch(`/api/prior-trees/resstock-dependencies?characteristic=${encodeURIComponent(characteristic)}`);
+  return response.ok ? response.json() : { available: false, dependencies: [] };
+}
+
+/** Registry entries for fields the config references but hasn't declared yet. */
+export async function fetchRegistrySuggestions(
+  fields: SemanticField[],
+  config: PriorConfig
+): Promise<PriorConfig['registry']['fields']> {
+  const data = await requestJson<{ fields: PriorConfig['registry']['fields'] }>(
+    '/api/prior-trees/registry-suggestions',
+    { fields: toApiFields(fields), config }
+  );
+  return data.fields;
+}
+
+export function validatePriorTree(
+  config: PriorConfig,
+  requiredTargets: string[]
+): Promise<PriorValidation> {
+  return requestJson('/api/prior-trees/validate', {
+    config,
+    required_targets: requiredTargets,
+    fields: [],
+  });
+}
+
+/** Draw `n` buildings from the config, over the project's own stock where possible. */
+export function samplePriorTree(
+  fields: SemanticField[],
+  config: PriorConfig,
+  n: number,
+  seed: number | null
+): Promise<SampleSummary> {
+  return requestJson('/api/prior-trees/sample', {
+    fields: toApiFields(fields),
+    config,
+    n,
+    seed,
+  });
+}
+
+export async function exportPriorTreeYaml(config: PriorConfig): Promise<string> {
+  const response = await fetch('/api/prior-trees/export', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ config, required_targets: [], fields: [] }),
+  });
+  if (!response.ok) throw new Error('Failed to export the prior tree.');
+  return response.text();
+}
+
+export interface BuildingTrace {
+  buildingId: string | null;
+  n: number;
+  known: Array<{ name: string; value: string | null; because: string }>;
+  estimated: Array<{ name: string; shares: Array<{ value: string | null; share: number }> }>;
+  parts: Array<{
+    path: string;
+    componentType: string | null;
+    sourceFields: string[];
+    /** `exists` is null when the component library couldn't be read. */
+    records: Array<{ name: string | null; share: number; exists: boolean | null }>;
+  }>;
+}
+
+/** Trace one building (or a random one) from its GIS row to the library records it uses. */
+export function inspectBuilding(
+  fields: SemanticField[],
+  config: PriorConfig,
+  componentMap: Record<string, unknown> | null,
+  idColumn: string,
+  buildingId: string | null
+): Promise<BuildingTrace> {
+  return requestJson('/api/inspect/building', {
+    building_id: buildingId,
+    id_column: idColumn,
+    fields: toApiFields(fields),
+    config,
+    component_map: componentMap,
+    n: 500,
+  });
+}
