@@ -116,12 +116,16 @@ def start_building_run(workspace: ProjectWorkspace) -> Job:
 
 
 def scenario_manifests(workspace: ProjectWorkspace) -> dict[str, Path]:
-    """The batch manifests Generate globi files wrote, by the Scenario each runs."""
+    """The batch manifests Generate globi files wrote, by the Scenario each runs ("Baseline",
+    or "Baseline · 2050-ssp245" when there are several climates)."""
     first = workspace.path("manifest")
     found: dict[str, Path] = {}
     for path in [first, *sorted(first.parent.glob("manifest-*.yml"))]:
         if path.exists():
-            found[str((yaml.safe_load(path.read_text()) or {}).get("scenario", "Baseline"))] = path
+            manifest = yaml.safe_load(path.read_text()) or {}
+            scenario = str(manifest.get("scenario", "Baseline"))
+            climate = str(manifest.get("name", "")).partition("/")[2]
+            found[f"{scenario} · {climate}" if climate else scenario] = path
     return found
 
 
@@ -153,14 +157,16 @@ def prepare_sample(workspace: ProjectWorkspace, n: int, scenarios: list[str]) ->
     run_dir.mkdir(parents=True, exist_ok=True)
     sample_gis = run_dir / "buildings.geojson"
     sample_gis.write_text(json.dumps({**stock, "features": picked}))
-    artifacts = yaml.safe_load(workspace.path("artifacts").read_text())
-    artifacts_path = run_dir / "artifacts.yml"
-    artifacts_path.write_text(yaml.safe_dump({**artifacts, "gis_file": str(sample_gis.resolve())}, sort_keys=False))
-
     written: dict[str, Path] = {}
     for scenario in scenarios:
         manifest = yaml.safe_load(manifests[scenario].read_text())
-        manifest.update(name=f"{manifest['name']}-sample", scenario=scenario, file_config=str(artifacts_path.resolve()))
+        # each climate has its own artifacts (weather file); the sample swaps in its buildings
+        source = globi_root() / manifest["file_config"]
+        artifacts_path = run_dir / source.name
+        artifacts = yaml.safe_load(source.read_text())
+        artifacts_path.write_text(yaml.safe_dump({**artifacts, "gis_file": str(sample_gis.resolve())}, sort_keys=False))
+        base, sep, climate = manifest["name"].partition("/")
+        manifest.update(name=f"{base}-sample{sep}{climate}", file_config=str(artifacts_path.resolve()))
         slug = "".join(c if c.isalnum() else "-" for c in scenario).strip("-").lower()
         written[scenario] = run_dir / f"manifest-{slug}.yml"
         written[scenario].write_text(yaml.safe_dump(manifest, sort_keys=False))

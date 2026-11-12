@@ -24,11 +24,24 @@ class BuildingGeometry(BaseModel):
     wwr: float = 0.3
 
 
+class Climate(BaseModel):
+    """One weather file batch runs repeat over, e.g. a morphed 2050 SSP2-4.5 file."""
+
+    label: str = ""
+    weather: str
+    year: int | None = None
+    ssp: str | None = None
+
+
 class GenerateRequest(BaseModel):
     name: str = "sbem-ui"
     epwzip_file: str = ""
     context: dict[str, str] = Field(default_factory=dict)
     building: BuildingGeometry = Field(default_factory=BuildingGeometry)
+    #: ids from sbem_ui.use_cases: each turns on the outputs it needs in every manifest
+    use_cases: list[str] = Field(default_factory=list)
+    #: empty: one run per scenario with `epwzip_file`; else one per scenario and climate
+    climates: list[Climate] = Field(default_factory=list)
 
 
 @router.get("/")
@@ -44,7 +57,8 @@ async def generate(
     """Write globi's run files into the project and return how to run them."""
     try:
         return generate_run_files(
-            workspace, body.name, body.epwzip_file, body.context, body.building.model_dump()
+            workspace, body.name, body.epwzip_file, body.context, body.building.model_dump(),
+            use_cases=body.use_cases, climates=[c.model_dump() for c in body.climates],
         )
     except GlobiFilesError as exc:
         raise HTTPException(status_code=400, detail=str(exc)) from exc

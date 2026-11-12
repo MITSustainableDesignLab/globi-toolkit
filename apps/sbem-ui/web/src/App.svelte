@@ -12,6 +12,7 @@
   import ProjectFiles from './lib/workflows/ProjectFiles.svelte';
   import SingleBuilding from './lib/workflows/SingleBuilding.svelte';
   import Simulations from './lib/workflows/Simulations.svelte';
+  import WillingnessToPay from './lib/workflows/WillingnessToPay.svelte';
   import { currentWorkflow, navigateTo, restoreLastWorkflow } from './lib/stores/projectStore';
   import { workspaceStore } from './lib/stores/workspaceStore';
   import { componentTreeStore } from './lib/stores/componentTreeStore';
@@ -76,6 +77,8 @@
         <GISCleaning />
       {:else if $currentWorkflow === 'model-execution'}
         <ModelExecution />
+      {:else if $currentWorkflow === 'wtp'}
+        <WillingnessToPay />
       {:else if $currentWorkflow === 'single-building'}
         <SingleBuilding />
       {:else if $currentWorkflow === 'simulations'}

@@ -5,6 +5,46 @@ components together so you can author inputs, run simulations, fetch results, te
 cases and visualise outputs from one place. The toolkit itself holds glue, not domain
 logic: modelling lives in the engine, data lives in globi-data.
 
+## How the repos fit together
+
+```mermaid
+flowchart LR
+  subgraph pypi["PyPI"]
+    epi["epinterface<br/>EnergyPlus models,<br/>component library"]
+    scy["scythe-engine<br/>simulation fan-out"]
+  end
+
+  engine["<b>globi</b> (engine)<br/>GIS, simulation,<br/>surrogates, worker"]
+  data["<b>globi-data</b><br/>versioned inputs,<br/>result and surrogate URIs"]
+  usecases["globi-use-cases<br/>WTP, adoption,<br/>emissions"]
+
+  subgraph toolkit["globi-toolkit (this repo)"]
+    cli["globi-toolkit CLI<br/>engine, data, visualise"]
+    ui["apps/sbem-ui<br/>authoring app"]
+    stack["Docker run stack<br/>Hatchet, workers, localstack"]
+    viz["visualise/<br/>results dashboard"]
+    docs["docs/<br/>documentation site"]
+  end
+
+  s3[("results on S3<br/>or localstack")]
+
+  epi --> engine
+  scy --> engine
+  engine -- "Python package,<br/>commit pinned in uv.lock" --> cli
+  engine -- "worker image built<br/>from that commit" --> stack
+  data -- "Python package, plus its<br/>registry cloned to ~/.cache" --> cli
+  ui -- "model files<br/>(fields, components, GIS)" --> cli
+  cli -- "globi submit" --> stack
+  stack --> s3
+  s3 --> viz
+  usecases -. "planned" .-> cli
+```
+
+The dashed link is planned. Clone only this repo: the engine and globi-data arrive as
+packages pinned in `uv.lock`, the worker image is built from the same engine commit, and
+globi-data's registry is cloned on first use. epinterface and scythe come in through the engine. Result URIs go
+back into globi-data with `globi-toolkit data outputs record`.
+
 ## Stages and where each comes from
 
 | Stage | Role (UBEM.IO) | Provided by | Status |
@@ -16,9 +56,9 @@ logic: modelling lives in the engine, data lives in globi-data.
 | **validate** — against metered data, calibration | all | `globi.validation`, globi-uk-calibration | later |
 | **fetch** — versioned inputs, result and surrogate URIs | all | [globi-data](https://github.com/MITSustainableDesignLab/globi-data) | dependency |
 | **analyse** — WTP, adoption, emissions | sustainability champion | [globi-use-cases](https://github.com/daryaguettler/globi-use-cases) | planned (needs a proper package) |
-| **visualise** | sustainability champion | results dashboard, moving here from the engine | planned |
+| **visualise** | sustainability champion | results dashboard, in `src/globi_toolkit/visualise/` | in this repo |
 
-The documentation site also moves here from the engine (see [MIGRATION.md](MIGRATION.md)).
+The documentation site lives here too (`make docs`); see [MIGRATION.md](MIGRATION.md) for what moved from the engine.
 
 ## Setup
 
@@ -70,8 +110,3 @@ make test-ui    # sbem-ui's tests
 
 Create projects under `inputs/` so Docker runs can see them. Single Building runs need the
 engine's `simulate-flat` command, which is not on globi main yet.
-
-## Repo map
-
-See `~/prez-viz/globi-repos/repo-map.html` for how the GloBI repos connect today and the
-two structures under consideration.

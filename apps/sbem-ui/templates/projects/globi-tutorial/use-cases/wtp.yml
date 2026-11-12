@@ -1,0 +1,89 @@
+# Willingness to pay: worked example for Massachusetts.
+# Residential model: Berzolla et al. (2025) "deal/no deal" logistic regression, Table 2, with
+# the encodings it was fitted on (from MA-stock-analysis, main_pipeline_doc.md). Check: at the
+# survey's mean features and a $10k upfront cost it should give about 78%.
+#
+# The area unit here is the US census tract: census-ma.csv is the ACS 5-year export used by
+# MA-stock-analysis, plus `geoid` (state+county+tract FIPS) to join on and `concern` (the
+# county's Yale Climate Opinions "worried" % / 25). Your buildings need a tract_id column.
+# Another region can use any area unit: put its code in a GIS column and in the table.
+typology_column: Typology
+seed: 42
+
+areas:
+  tracts:
+    file: census-ma.csv
+    join: {building: tract_id, table: geoid}
+    distributions:                  # value -> the count columns that make it up
+      education:                    # 1 high school, 2 associate, 3 bachelor, 4 graduate
+        1: [education_high_school_grad, education_ged]
+        2: [education_associates_degree]
+        3: [education_bachelors_degree]
+        4: [education_masters_degree, education_professional_school_degree, education_doctorate_degree]
+      household_size:
+        1: [household_1_person]
+        2: [household_2_person]
+        3: [household_3_person]
+        4: [household_4_person]
+        5: [household_5_person]
+        6: [household_6_person]
+        7: [household_7_or_more_person]
+      income_k:                     # bracket midpoints, k$
+        5: [income_less_than_10k]
+        12.5: [income_10k_to_14999]
+        17.5: [income_15k_to_19999]
+        22.5: [income_20k_to_24999]
+        27.5: [income_25k_to_29999]
+        32.5: [income_30k_to_34999]
+        37.5: [income_35k_to_39999]
+        42.5: [income_40k_to_44999]
+        47.5: [income_45k_to_49999]
+        55: [income_50k_to_59999]
+        67.5: [income_60k_to_74999]
+        87.5: [income_75k_to_99999]
+        112.5: [income_100k_to_124999]
+        137.5: [income_125k_to_149999]
+        175: [income_150k_to_199999]
+        250: [income_200k_or_more]
+
+inputs:
+  year_built:
+    source: building
+    column: Age_bracket
+    map: {post_2003: 1, btw_1975_2003: 2, pre_1975: 3.5}   # survey ordinal; pre_1975 spans 3 and 4
+  education: {source: area, table: tracts, sample: education}
+  bedrooms: {source: area, table: tracts, sample: household_size}    # household size stands in for bedrooms
+  residents: {source: area, table: tracts, sample: household_size}   # the same draw as bedrooms
+  income:
+    source: area
+    table: tracts
+    sample: income_k
+    bins: [25, 50, 75, 100, 150]    # survey ordinal 0-5: <25k, 25-50k, ..., >150k
+  concern: {source: area, table: tracts, column: concern}           # 0-4 scale
+  upfront_cost: {source: results, column: net_cost_usd, scale: 0.001}        # k$
+  neighbor: {source: value, value: 1.0}                             # "uses the same energy as my neighbours"
+  energy_cost: {source: results, column: energy_cost_usd, scale: 0.001}      # annual bill, k$ (not savings)
+
+residential:
+  typologies: [Residential]
+  monte_carlo_samples: 100
+  model:
+    type: logit
+    intercept: 0.0                  # 0 is the fitted value when inputs use these encodings
+    coefficients:
+      year_built: -0.051
+      education: 0.110
+      bedrooms: 0.272
+      residents: 0.087
+      income: 0.046
+      concern: 0.271
+      upfront_cost: -0.058
+      neighbor: -0.029
+      energy_cost: -0.012
+
+commercial:
+  typologies: [Office, School, Hospital, Hotel]
+  years: 15
+  discount_rate: 0.07
+  price_growth: 0.02
+  threshold_usd: 0

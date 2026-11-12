@@ -1,0 +1,37 @@
+# Willingness to pay: fill this in for your region (sbem-ui → Willingness to pay), or start
+# from globi-tutorial's worked example. Nothing is assumed: every blank must be filled.
+#
+# 1. Split your buildings into areas of your choice (any unit) with a column in your GIS.
+# 2. Put each area's WTP data in a CSV next to this file, one row per area.
+# 3. Say which inputs your model uses, where each comes from, and how it is encoded.
+typology_column: Typology
+seed: 42
+
+areas: {}
+  # my_areas:
+  #   file: my-areas.csv
+  #   join: {building: area_code, table: code}   # GIS column <-> CSV column
+  #   distributions:                             # optional: counts to sample households from
+  #     income_k: {20: [income_low], 60: [income_mid], 120: [income_high]}
+
+inputs: {}
+  # upfront_cost: {source: results, column: net_cost_usd, scale: 0.001}
+  # income: {source: area, table: my_areas, sample: income_k}
+  # concern: {source: area, table: my_areas, column: concern}
+  # age: {source: building, column: Age_bracket, map: {old: 2, new: 1}}
+  # neighbor: {source: value, value: 1.0}
+
+residential:
+  typologies: []            # your Typology values that are homes
+  monte_carlo_samples: 100
+  model:
+    type: logit             # P(accept) = 1 / (1 + exp(-(intercept + sum of coefficient x input)))
+    intercept: null
+    coefficients: {}        # one per input
+
+commercial:
+  typologies: []            # your Typology values decided on payback
+  years: null               # years of savings counted
+  discount_rate: null       # e.g. 0.07
+  price_growth: 0.0
+  threshold_usd: 0          # accept when NPV is at least this

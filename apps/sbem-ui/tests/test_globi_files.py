@@ -125,6 +125,77 @@ def test_generates_batch_files_from_a_saved_gis():
     assert result["commands"]["batch"].count("--max-sims 5") == 2
 
 
+def test_use_cases_turn_their_outputs_on_in_every_manifest():
+    workspace = saved_project()
+    save_stock(workspace)
+    settings = workspace.root / "use-cases" / "overheating.yml"
+    settings.parent.mkdir(exist_ok=True)
+    settings.write_text(yaml.safe_dump({"heat_thresholds": [{"threshold": 28.0}]}))  # a user's own thresholds
+
+    assert generate(use_cases=["overheating", "hourly-conditions"]).status_code == 200
+    for name in ("manifest.yml", "manifest-retrofit.yml"):
+        manifest = yaml.safe_load((workspace.root / name).read_text())
+        assert manifest["overheating_config"] == str(settings.resolve())
+        assert manifest["hourly_data_config"].endswith("use-cases/hourly-data.yml")
+    # an edited file is kept; a missing one starts from globi's defaults
+    assert yaml.safe_load(settings.read_text())["heat_thresholds"] == [{"threshold": 28.0}]
+    assert yaml.safe_load((workspace.root / "use-cases" / "hourly-data.yml").read_text())["output_mode"] == "fileref-only"
+    chosen = {c["id"]: c["chosen"] for c in client.get("/api/globi-files/").json()["useCases"]}
+    assert chosen == {"overheating": True, "hourly-conditions": True}
+
+    assert generate(use_cases=[]).status_code == 200
+    assert yaml.safe_load(workspace.path("manifest").read_text())["hourly_data_config"] is None
+    assert "overheating_config" not in yaml.safe_load(workspace.path("manifest").read_text())
+
+
+def test_each_climate_runs_every_scenario_with_its_own_weather():
+    workspace = saved_project()
+    save_stock(workspace)
+    future = workspace.root / "weather" / "boston-2050-ssp245.zip"
+    shutil.copy(workspace.root / WEATHER, future)
+    climates = [
+        {"label": "2025", "weather": WEATHER, "year": 2025},
+        {"label": "2050 SSP2-4.5", "weather": "weather/boston-2050-ssp245.zip", "year": 2050, "ssp": "SSP2-4.5"},
+    ]
+
+    result = generate(climates=climates).json()
+    assert result["written"] == [
+        "building.yml", "artifacts.yml", "gis-preprocessor.yml", "manifest.yml", "manifest-retrofit-2025.yml",
+        "artifacts-2050-ssp2-4-5.yml", "manifest-baseline-2050-ssp2-4-5.yml", "manifest-retrofit-2050-ssp2-4-5.yml",
+    ]
+    future_run = yaml.safe_load((workspace.root / "manifest-retrofit-2050-ssp2-4-5.yml").read_text())
+    assert future_run["name"] == "Demo run/2050-ssp2-4-5"  # runs as Demo run/2050-ssp2-4-5/Retrofit
+    future_artifacts = yaml.safe_load(Path(future_run["file_config"]).read_text())
+    assert future_artifacts["epwzip_file"] == str(future.resolve())
+    assert yaml.safe_load(workspace.path("manifest").read_text())["name"] == "Demo run/2025"
+    saved = client.get("/api/globi-files/").json()["climates"]
+    assert [(c["year"], c["ssp"]) for c in saved] == [(2025, None), (2050, "SSP2-4.5")]
+
+    # back to one weather file: the climate files go, so they can't be run by mistake
+    assert generate().json()["written"][-1] == "manifest-retrofit.yml"
+    assert not (workspace.root / "artifacts-2050-ssp2-4-5.yml").exists()
+    assert sorted(p.name for p in workspace.root.glob("manifest*.yml")) == ["manifest-retrofit.yml", "manifest.yml"]
+
+
+def test_climates_need_their_own_names():
+    workspace = saved_project()
+    save_stock(workspace)
+    same = [{"label": "2050", "weather": WEATHER}, {"label": "2050", "weather": WEATHER}]
+    assert "its own name" in generate(climates=same).json()["detail"]
+    unnamed = [{"label": "", "weather": WEATHER}, {"label": "2050", "weather": WEATHER}]
+    assert generate(climates=unnamed).status_code == 400
+
+
+def test_rejects_an_unknown_use_case_and_an_invalid_settings_file():
+    workspace = saved_project()
+    save_stock(workspace)
+    assert "Unknown use case" in generate(use_cases=["wtp"]).json()["detail"]
+    settings = workspace.root / "use-cases" / "overheating.yml"
+    settings.parent.mkdir(exist_ok=True)
+    settings.write_text(yaml.safe_dump({"heat_thresholds": "hot"}))
+    assert generate(use_cases=["overheating"]).status_code == 400
+
+
 def test_batch_warns_about_fields_the_gis_has_no_column_for():
     workspace = saved_project({**FIELDS, "Heating": ["Gas", "HeatPump"]})
     save_stock(workspace)

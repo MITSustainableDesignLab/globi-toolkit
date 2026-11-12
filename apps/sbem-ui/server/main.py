@@ -19,6 +19,7 @@ from routers import (
     schedule_variability_router,
     semantic_fields_router,
     workspace_router,
+    wtp_router,
 )
 from services.component_tree import get_component_tree
 import sys
@@ -58,6 +59,7 @@ app.include_router(prior_trees_router)
 app.include_router(gis_router)
 app.include_router(globi_files_router)
 app.include_router(workspace_router)
+app.include_router(wtp_router)
 app.include_router(assist_router)
 app.include_router(schedule_variability_router)
 app.include_router(inspect_router)

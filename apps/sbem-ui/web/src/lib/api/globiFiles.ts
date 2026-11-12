@@ -3,6 +3,14 @@
  * gis-preprocessor.yml for a batch run), generated from the project's saved files.
  */
 
+/** One weather file batch runs repeat over, e.g. a morphed 2050 SSP2-4.5 file. */
+export interface Climate {
+  label: string;
+  weather: string;
+  year: number | null;
+  ssp: string | null;
+}
+
 export interface GlobiFilesStatus {
   /** From the saved semantic-fields.yaml: one building value is picked per field. */
   fields: Array<{ name: string; options: Array<string | number> }>;
@@ -10,6 +18,10 @@ export interface GlobiFilesStatus {
   weather: string[];
   gisFile: string | null;
   componentMapSaved: boolean;
+  /** Analyses a batch run can be set up for; `chosen` when the last manifest turned their outputs on. */
+  useCases: Array<{ id: string; label: string; description: string; chosen: boolean }>;
+  /** The climates saved by the last Generate (use-cases/climates.yml); empty before. */
+  climates: Climate[];
 }
 
 export interface BuildingGeometry {
@@ -47,6 +59,8 @@ export function generateGlobiFiles(body: {
   epwzip_file: string;
   context: Record<string, string>;
   building: BuildingGeometry;
+  use_cases: string[];
+  climates: Climate[];
 }): Promise<GeneratedGlobiFiles> {
   return requestJson('/api/globi-files/generate', {
     method: 'POST',

@@ -11,6 +11,7 @@ import yaml
 from services import globi_runs
 from services.globi_runs import AREA, GlobiRunError, prepare_sample, summarize_stock
 from test_globi_files import (
+    WEATHER,
     client,
     generate,
     save_stock,
@@ -75,6 +76,22 @@ def test_sample_runs_the_same_buildings_under_every_scenario():
     # the same seed picks the same buildings next time
     again, _, _ = prepare_sample(workspace, 5, ["Baseline"])
     assert json.loads((again / "buildings.geojson").read_text())["features"] == sample
+
+
+def test_sample_runs_each_climate_with_its_own_weather():
+    workspace = saved_project()
+    save_stock(workspace)
+    climates = [{"label": "2025", "weather": WEATHER}, {"label": "2050", "weather": WEATHER, "year": 2050}]
+    assert generate(climates=climates).status_code == 200
+
+    run_dir, manifests, _ = prepare_sample(workspace, 3, ["Baseline · 2025", "Retrofit · 2050"])
+    docs = {s: yaml.safe_load(p.read_text()) for s, p in manifests.items()}
+    assert docs["Retrofit · 2050"]["name"] == "Demo run-sample/2050"
+    assert docs["Retrofit · 2050"]["scenario"] == "Retrofit"
+    assert Path(docs["Retrofit · 2050"]["file_config"]).name == "artifacts-2050.yml"
+    assert Path(docs["Baseline · 2025"]["file_config"]).name == "artifacts.yml"
+    for doc in docs.values():
+        assert yaml.safe_load(Path(doc["file_config"]).read_text())["gis_file"] == str((run_dir / "buildings.geojson").resolve())
 
 
 def test_sample_needs_generated_batch_files_and_known_scenarios():

@@ -18,6 +18,7 @@
     { id: 'retrofits', label: 'Retrofits' },
     { id: 'sampling', label: 'Sampling' },
     { id: 'model-execution', label: 'Model Execution' },
+    { id: 'wtp', label: 'Willingness to Pay' },
   ];
 
   const themes: Array<{ id: ThemeChoice; label: string }> = [

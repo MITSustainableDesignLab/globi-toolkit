@@ -6,6 +6,7 @@ export type WorkflowId =
   | 'retrofits'
   | 'sampling'
   | 'model-execution'
+  | 'wtp'
   | 'single-building'
   | 'simulations'
   | 'project-files';

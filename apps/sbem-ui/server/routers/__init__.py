@@ -16,6 +16,7 @@ from .flat_model import router as flat_model_router
 from .sampling import router as sampling_router
 from .part_rules import router as part_rules_router
 from .component_priors import router as component_priors_router
+from .wtp import router as wtp_router
 
 __all__ = [
     "artifacts_router",
@@ -34,4 +35,5 @@ __all__ = [
     "sampling_router",
     "part_rules_router",
     "component_priors_router",
+    "wtp_router",
 ]

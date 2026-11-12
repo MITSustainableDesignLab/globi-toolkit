@@ -12,6 +12,7 @@
     runSample,
     type BuildingGeometry,
     type BuildingRunResult,
+    type Climate,
     type EndUses,
     type GeneratedGlobiFiles,
     type GlobiFilesStatus,
@@ -33,7 +34,11 @@
 
   let status: GlobiFilesStatus | null = null;
   let context: Record<string, string> = {};
-  let weather = '';
+  /** Weather files batch runs repeat over; with one, runs are named as before. */
+  let climates: Climate[] = [];
+  const newClimate = (weather = ''): Climate => ({ label: '', weather, year: null, ssp: null });
+  /** Use case ids whose outputs every batch manifest turns on. */
+  let useCases: string[] = [];
   let geometry: BuildingGeometry = { length: 20, width: 15, num_floors: 2, f2f_height: 3.5, wwr: 0.3 };
   let generating = false;
   let result: GeneratedGlobiFiles | null = null;
@@ -131,7 +136,8 @@
     try {
       status = await fetchGlobiFilesStatus();
       context = Object.fromEntries(status.fields.map((field) => [field.name, String(field.options[0] ?? '')]));
-      weather = status.weather[0] ?? '';
+      climates = status.climates.length ? status.climates : [newClimate(status.weather[0] ?? '')];
+      useCases = status.useCases.filter((c) => c.chosen).map((c) => c.id);
     } catch (e) {
       error = e instanceof Error ? e.message : 'Failed to read the project.';
     }
@@ -144,9 +150,11 @@
     try {
       result = await generateGlobiFiles({
         name: $workspaceStore.workspace?.name ?? 'sbem-ui',
-        epwzip_file: weather.trim(),
+        epwzip_file: climates[0]?.weather.trim() ?? '',
+        climates: climates.map((c) => ({ ...c, weather: c.weather.trim() })),
         context,
         building: geometry,
+        use_cases: useCases,
       });
       tutorialMarks.update((marks) => ({ ...marks, runFiles: true }));
       void loadScenarios();
@@ -232,11 +240,35 @@
           <label class="field">Floor-to-floor (m)<input type="number" min="0" step="0.1" bind:value={geometry.f2f_height} /></label>
           <label class="field">Window-to-wall ratio<input type="number" min="0" max="1" step="0.05" bind:value={geometry.wwr} /></label>
         </div>
-        <label class="field">
-          Weather file (.zip with .epw and .ddy): a project path or a URL
-          <input type="text" list="weather-files" bind:value={weather} placeholder="weather/….zip or https://…" />
+        <fieldset class="field">
+          <legend>Weather files (.zip with .epw and .ddy): a project path or a URL</legend>
+          <p class="hint">
+            The example building uses the first. For future climates, add a row per weather file you have morphed (for
+            example 2050 SSP2-4.5); batch and sample runs repeat every scenario under each one.
+          </p>
+          {#each climates as climate, i}
+            <div class="climate-row">
+              <input type="text" list="weather-files" bind:value={climate.weather} placeholder="weather/….zip or https://…" aria-label="Weather file" />
+              <input type="text" bind:value={climate.label} placeholder={climates.length > 1 ? 'Name, e.g. 2050 SSP2-4.5' : 'Name (optional)'} aria-label="Climate name" />
+              <input type="number" min="1900" max="2200" step="1" bind:value={climate.year} placeholder="Year" aria-label="Year" />
+              <input type="text" bind:value={climate.ssp} placeholder="SSP (optional)" aria-label="Climate scenario (SSP)" />
+              {#if climates.length > 1}
+                <button type="button" class="btn btn-link" onclick={() => (climates = climates.filter((_, j) => j !== i))}>Remove</button>
+              {/if}
+            </div>
+          {/each}
+          <div class="actions"><button type="button" class="btn btn-link" onclick={() => (climates = [...climates, newClimate()])}>Add a climate</button></div>
           <datalist id="weather-files">{#each status.weather as file}<option value={file}></option>{/each}</datalist>
-        </label>
+        </fieldset>
+        <fieldset class="field">
+          <legend>What will you analyse?</legend>
+          <p class="hint">Energy use and peaks are always included. Each choice adds results to batch and sample runs, with settings in the project's <code>use-cases/</code> folder.</p>
+          <div class="checks-row">
+            {#each status.useCases as useCase}
+              <label title={useCase.description}><input type="checkbox" value={useCase.id} bind:group={useCases} /> {useCase.label}</label>
+            {/each}
+          </div>
+        </fieldset>
         <p class="hint">
           {status.gisFile
             ? `Batch files will run over ${status.gisFile}.`
@@ -412,6 +444,9 @@
   .sample-form { display: flex; gap: var(--space-4); align-items: flex-end; flex-wrap: wrap; }
   .sample-form input[type='number'] { width: 8em; }
   fieldset.field { border: none; padding: 0; margin: 0; }
+  .climate-row { display: flex; gap: var(--space-2); flex-wrap: wrap; margin-bottom: var(--space-2); }
+  .climate-row input[type='text'] { flex: 1 1 12em; min-width: 0; }
+  .climate-row input[type='number'] { width: 6em; }
   .checks-row { display: flex; gap: var(--space-3); flex-wrap: wrap; font-size: var(--text-sm); }
   .num { text-align: right; font-variant-numeric: tabular-nums; }
   .total td { font-weight: 600; }

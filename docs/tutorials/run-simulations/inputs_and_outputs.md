@@ -452,6 +452,25 @@ outputs/
 
 To download another table, add `--dataframe-key`. Other tables are saved as `.pq` only. For the list of overheating and hourly tables, see [section D of the tutorial](tutorial.md#d-overheating-and-hourly-outputs).
 
+#### Download every table, at the granularity you need
+
+`globi-toolkit results` downloads all of a run's tables at once, then exports them as CSV, Excel or Parquet:
+
+```bash
+make results-native fetch -- "Demo/Baseline"          # latest version, into outputs/Demo/Baseline/vX.Y.Z/
+make results-native export -- outputs/Demo/Baseline/v1.0.0 --granularity annual --format xlsx
+```
+
+| `--granularity` | What you get                                                                                                   |
+| --------------- | -------------------------------------------------------------------------------------------------------------- |
+| `annual`        | `EnergyAndPeak` for the year: energy added up over the months, peak = the highest month                        |
+| `monthly`       | The tables as GloBI writes them (default)                                                                      |
+| `hourly`        | The monthly tables, plus one Parquet file per building in `hourly/` with hour-by-hour room temperature and humidity |
+
+CSV and Excel files have one header row (for example `Energy.End Uses.Heating`) and keep every row label, such as the building and the zone, as a column.
+
+Hourly files exist only for runs set up for them. In sbem-ui, go to **Model Execution → What will you analyse?** and tick **Hourly room conditions** (or **Overheating** for the overheating tables) before you generate the run files. The settings go into the project's `use-cases/` folder, where you can edit them. Hourly *energy* is not available yet: GloBI computes it, but keeps only the monthly totals and peaks.
+
 ---
 
 #### `EnergyAndPeak` table format
