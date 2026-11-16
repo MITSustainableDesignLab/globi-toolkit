@@ -1,7 +1,7 @@
 [project]
 name = "globi-toolkit"
 version = "0.1.0"
-description = "Main entry point for the Global Building Inventory (GloBI): author inputs, run simulations, fetch results, analyse use cases, visualise outputs"
+description = "Main entry point for the Global Building Inventory (GloBI): author inputs, run simulations, fetch results, analyze use cases, visualize outputs"
 readme = "README.md"
 requires-python = ">=3.12,<3.14"
 license = { text = "MIT" }
@@ -111,14 +111,14 @@ ignore = [
 "tests/*" = ["S101", "D100", "D103"]
 # shortcut: dashboard kept byte-identical to the engine copy (only imports renamed) for review;
 # drop both exclusions and run `ruff format` + fix UP042 once the engine copy is deleted
-"src/globi_toolkit/visualise/*" = ["UP042"]
+"src/globi_toolkit/visualize/*" = ["UP042"]
 
 [tool.ruff.lint.pydocstyle]
 convention = "google"
 
 [tool.ruff.format]
 preview = true
-exclude = ["src/globi_toolkit/visualise/*"]
+exclude = ["src/globi_toolkit/visualize/*"]
 
 [tool.pyright]
 include = ["src/globi_toolkit"]

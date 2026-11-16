@@ -101,7 +101,7 @@ fanouts-native: ## Run a fanouts worker on this machine
 
 .PHONY: viz-native
 viz-native: ## Run the results dashboard on this machine
-	@uv run --env-file .env.$(AWS_ENV).aws --env-file .env.scythe.storage globi-toolkit visualise
+	@uv run --env-file .env.$(AWS_ENV).aws --env-file .env.scythe.storage globi-toolkit visualize
 
 .PHONY: results-native
 results-native: ## Download or export run results, e.g. make results-native fetch -- "Demo/Baseline"

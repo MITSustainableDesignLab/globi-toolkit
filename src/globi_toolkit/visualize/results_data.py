@@ -317,7 +317,7 @@ def build_retrofit_map_df(
     cart_crs: str = "EPSG:3857",
 ) -> pd.DataFrame | None:
     """Build map-ready df with geometry and retrofit metrics (eui, energy_cost, emissions, etc)."""
-    from globi_toolkit.visualise.utils import build_map_df_from_output
+    from globi_toolkit.visualize.utils import build_map_df_from_output
 
     geo_df = build_map_df_from_output(df, cart_crs=cart_crs)
     if geo_df is None:

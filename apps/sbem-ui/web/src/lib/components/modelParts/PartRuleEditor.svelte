@@ -2,7 +2,7 @@
   /**
    * One part, in the side panel: the same option for every building, or an option per value
    * of the characteristics it varies by. Options show the value that sets them apart (W/m²,
-   * U-value, COP); one colour is one library record, so rows that share a colour share it.
+   * U-value, COP); one color is one library record, so rows that share a color share it.
    * Pickers and forms open only when a pill or button is clicked.
    */
   import Icon from '../Icon.svelte';
@@ -65,7 +65,7 @@
   const rows = $derived(rowsOf(current, options, MAX_ROWS));
   const total = $derived(rowCount(current, options));
   const byName = $derived(Object.fromEntries((records ?? []).map((record) => [record.Name, record])));
-  /** One colour per option in use, in the order the rows use them. */
+  /** One color per option in use, in the order the rows use them. */
   const used = $derived(usedOptions(current, options, MAX_ROWS));
   const isConstruction = $derived(type === 'ConstructionAssembly');
   const candidates = $derived.by(() => {
@@ -91,7 +91,7 @@
   let uncertain = $state<string | null>(null);
   let newField = $state({ name: '', values: '' });
 
-  const colour = (name: string | null) =>
+  const color = (name: string | null) =>
     name && used.includes(name) ? `var(--series-${(used.indexOf(name) % 8) + 1})` : 'var(--border-strong)';
   const valueOf = (name: string | null) => (name ? keyValue(type, byName[name], conductivity) || name : 'Choose…');
 
@@ -172,7 +172,7 @@
 
 {#snippet pill(key: string, option: string | null)}
   <button type="button" class="pill" class:open={picking === key} aria-expanded={picking === key} title={option ?? ''} onclick={() => openPicker(key)}>
-    <span class="dot" style:background={colour(option)}></span>
+    <span class="dot" style:background={color(option)}></span>
     <span class="value">{valueOf(option)}</span>
     <Icon name="chevron-down" size={14} />
   </button>
@@ -210,7 +210,7 @@
         {#each candidates as record (record.Name)}
           <li>
             <button type="button" class="choice" class:chosen={record.Name === optionFor(picking ?? DEFAULT_KEY)} title={record.Name} onclick={() => assign(record.Name)}>
-              <span class="dot" style:background={colour(record.Name)}></span>
+              <span class="dot" style:background={color(record.Name)}></span>
               <span class="value">{keyValue(type, record, conductivity) || record.Name}</span>
               <span class="name">{record.Name}</span>
             </button>

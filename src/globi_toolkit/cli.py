@@ -86,8 +86,8 @@ def export(run_dir: Path, granularity: str, fmt: str, out: Path | None) -> None:
 
 
 @cli.command()
-def visualise() -> None:
+def visualize() -> None:
     """Open the results dashboard (Streamlit)."""
-    app = Path(__file__).parent / "visualise" / "main.py"
+    app = Path(__file__).parent / "visualize" / "main.py"
     # fixed argv (this interpreter + a path inside the package), no user input
     sys.exit(subprocess.call([sys.executable, "-m", "streamlit", "run", str(app)]))  # noqa: S603

@@ -6,9 +6,9 @@ from collections.abc import Callable
 
 import streamlit as st
 
-from globi_toolkit.visualise.data_sources import DataSource
-from globi_toolkit.visualise.sidebar import render_data_source_sidebar
-from globi_toolkit.visualise.views import (
+from globi_toolkit.visualize.data_sources import DataSource
+from globi_toolkit.visualize.sidebar import render_data_source_sidebar
+from globi_toolkit.visualize.views import (
     render_compare_page,
     render_overheating_page,
     render_overview_page,

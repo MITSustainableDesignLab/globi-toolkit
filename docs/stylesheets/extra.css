@@ -1,4 +1,4 @@
-/* Troubleshooting entries: `??? problem "..."`. A quiet grey outline, no icon. */
+/* Troubleshooting entries: `??? problem "..."`. A quiet gray outline, no icon. */
 .md-typeset .admonition.problem,
 .md-typeset details.problem {
   border: 0.05rem solid var(--md-default-fg-color--lightest);

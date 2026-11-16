@@ -8,8 +8,8 @@ import pandas as pd
 import streamlit as st
 import streamlit.components.v1 as components
 
-from globi_toolkit.visualise.data_sources import DataSource
-from globi_toolkit.visualise.plotting import (
+from globi_toolkit.visualize.data_sources import DataSource
+from globi_toolkit.visualize.plotting import (
     EnergyIntensityUnit,
     convert_eui_scenario_dict,
     create_building_map_deck,
@@ -20,7 +20,7 @@ from globi_toolkit.visualise.plotting import (
     energy_intensity_axis_label,
     energy_intensity_factor,
 )
-from globi_toolkit.visualise.results_data import (
+from globi_toolkit.visualize.results_data import (
     apply_scenario_display_names,
     build_retrofit_map_df,
     extract_comparison_data,
@@ -30,8 +30,8 @@ from globi_toolkit.visualise.results_data import (
     normalize_fuel_name,
     portfolio_kpis,
 )
-from globi_toolkit.visualise.utils import infer_rotated_rectangle_crs_hint
-from globi_toolkit.visualise.views.common import (
+from globi_toolkit.visualize.utils import infer_rotated_rectangle_crs_hint
+from globi_toolkit.visualize.views.common import (
     building_filters,
     eui_unit,
     eui_unit_suffix,
@@ -453,7 +453,7 @@ def _cached_retrofit_map(
     _view: pd.DataFrame,
 ) -> tuple[pd.DataFrame, list[dict] | None] | None:
     """Map frame (with per-building cost and emissions) and its geometry, cached per scenario."""
-    from globi_toolkit.visualise.utils import build_map_features_from_df
+    from globi_toolkit.visualize.utils import build_map_features_from_df
 
     map_df = build_retrofit_map_df(
         _view,
@@ -476,7 +476,7 @@ def _render_compare_map(
     syscost: dict[str, float],
     unit: EnergyIntensityUnit,
 ) -> None:
-    """Map of one scenario, coloured by an energy (or, with costs on, cost) measure."""
+    """Map of one scenario, colored by an energy (or, with costs on, cost) measure."""
     st.markdown("#### Map")
     metrics = [
         ("eui", "greens", energy_intensity_axis_label(unit)),
@@ -495,7 +495,7 @@ def _render_compare_map(
         "Scenario", options=list(scenarios), key="compare_map_scenario"
     )
     value_col, cmap, metric_label = col_m.selectbox(
-        "Colour by",
+        "Color by",
         options=metrics,
         format_func=lambda x: x[2],
         key="compare_map_metric",

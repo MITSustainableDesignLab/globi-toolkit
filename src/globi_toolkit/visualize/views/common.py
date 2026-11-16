@@ -12,21 +12,21 @@ import numpy as np
 import pandas as pd
 import streamlit as st
 
-from globi_toolkit.visualise.data_sources import DataSource, LocalDataSource
-from globi_toolkit.visualise.export import render_html_to_png
-from globi_toolkit.visualise.plotting import (
+from globi_toolkit.visualize.data_sources import DataSource, LocalDataSource
+from globi_toolkit.visualize.export import render_html_to_png
+from globi_toolkit.visualize.plotting import (
     EnergyIntensityUnit,
     Theme,
     energy_intensity_factor,
 )
-from globi_toolkit.visualise.results_data import (
+from globi_toolkit.visualize.results_data import (
     default_filters,
     filter_candidates,
     filter_label,
 )
-from globi_toolkit.visualise.utils import load_output_table
+from globi_toolkit.visualize.utils import load_output_table
 
-# greens/reds start at their first visible shade, matching the map colours
+# greens/reds start at their first visible shade, matching the map colors
 _COLORMAP_GRADIENTS = {
     "greens": "linear-gradient(to right, #c7e9c0, #74c476, #31a354, #006d2c)",
     "viridis": "linear-gradient(to right, #440154, #3b528b, #21918c, #5ec962, #fde725)",
@@ -57,14 +57,14 @@ def load_run(
 
 
 def render_colormap_legend(label: str, value_stats: dict, cmap: str) -> None:
-    """Render colormap legend with the clipped colour range."""
+    """Render colormap legend with the clipped color range."""
     gradient = _COLORMAP_GRADIENTS.get(cmap, _COLORMAP_GRADIENTS["viridis"])
     v_min = value_stats["min"]
     v_max = value_stats["max"]
     st.markdown(
         f"""
 <div style="margin-top: 0.5rem; font-size: 0.85rem;">
-  <div style="margin-bottom: 0.15rem;">{label} (5th to 95th percentile; values beyond take the end colours)</div>
+  <div style="margin-bottom: 0.15rem;">{label} (5th to 95th percentile; values beyond take the end colors)</div>
   <div style="display: flex; align-items: center; gap: 0.5rem;">
     <span style="color: #6b7280;">{v_min:,.1f}</span>
     <div style="

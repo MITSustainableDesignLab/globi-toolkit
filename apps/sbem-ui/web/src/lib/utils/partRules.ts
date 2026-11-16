@@ -188,7 +188,7 @@ export function removeFromRules(rules: PartRules, field: string, options: Record
 }
 
 /**
- * The options a rule actually uses, in the order its rows use them: one colour each on the
+ * The options a rule actually uses, in the order its rows use them: one color each on the
  * Component Map. The default counts only while some building still gets it.
  */
 export function usedOptions(rule: PartRule, options: Record<string, string[]>, limit = 200): string[] {

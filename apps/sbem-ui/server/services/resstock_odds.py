@@ -153,7 +153,7 @@ def odds(
 
 
 def unused_options(characteristic: str, options: list[str]) -> list[str]:
-    """Options from ResStock's catalogue that its national sample never gives a home."""
+    """Options from ResStock's catalog that its national sample never gives a home."""
     table = load_table(characteristic)
     return [o for o in options if o not in table.options]
 

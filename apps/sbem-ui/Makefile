@@ -32,8 +32,8 @@ test:
 test-web:
 	cd web && node --import ./tests/register.mjs --test 'tests/**/*.test.ts'
 
-# Components use the type scale and colour tokens in web/src/app.css; a raw px font size or
-# hex colour fails the check. Mark a deliberate exception with /* raw-ok */ on the same line.
+# Components use the type scale and color tokens in web/src/app.css; a raw px font size or
+# hex color fails the check. Mark a deliberate exception with /* raw-ok */ on the same line.
 check:
 	cd web && npm run check
 	@! grep -rnE 'font-size:\s*[0-9]+px|#[0-9a-fA-F]{3,6}\b' web/src --include='*.svelte' | grep -v 'raw-ok' \

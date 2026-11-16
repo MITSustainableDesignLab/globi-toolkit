@@ -61,7 +61,7 @@ inputs:
     bins: [25, 50, 75, 100, 150]    # survey ordinal 0-5: <25k, 25-50k, ..., >150k
   concern: {source: area, table: tracts, column: concern}           # 0-4 scale
   upfront_cost: {source: results, column: net_cost_usd, scale: 0.001}        # k$
-  neighbor: {source: value, value: 1.0}                             # "uses the same energy as my neighbours"
+  neighbor: {source: value, value: 1.0}                             # "uses the same energy as my neighbors"
   energy_cost: {source: results, column: energy_cost_usd, scale: 0.001}      # annual bill, k$ (not savings)
 
 residential:

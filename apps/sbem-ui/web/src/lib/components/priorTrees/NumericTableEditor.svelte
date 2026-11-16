@@ -5,7 +5,7 @@
    * The chart is a dot plot with error bars rather than a heatmap -- what matters
    * for a numeric prior is where each combination's mean sits relative to the
    * others, and how wide it is. All rows share one axis so the comparison is
-   * direct, and the mean is labelled on every row so the read never depends on
+   * direct, and the mean is labeled on every row so the read never depends on
    * pixel position alone.
    */
   import type { ConditionalPriorSpec, GeneratedKey } from '../../types/priorTrees';

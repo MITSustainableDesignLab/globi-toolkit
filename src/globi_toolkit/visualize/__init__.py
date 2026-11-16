@@ -1,11 +1,11 @@
 """Visualization tools for the GloBI project."""
 
-from globi_toolkit.visualise.data_sources import (
+from globi_toolkit.visualize.data_sources import (
     DataSource,
     LocalDataSource,
     S3DataSource,
 )
-from globi_toolkit.visualise.models import (
+from globi_toolkit.visualize.models import (
     Building3DConfig,
     BuildingMetric,
     DataSourceConfig,
@@ -17,7 +17,7 @@ from globi_toolkit.visualise.models import (
     UseCaseConfig,
     UseCaseType,
 )
-from globi_toolkit.visualise.views import (
+from globi_toolkit.visualize.views import (
     render_compare_page,
     render_overheating_page,
     render_overview_page,

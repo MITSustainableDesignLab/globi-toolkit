@@ -50,7 +50,7 @@ test('a new default drops rows that already used it', () => {
   assert.equal(partStatus(emptyRule()), 'todo');
 });
 
-test('colours follow the options rows use; an unused default gets none', () => {
+test('colors follow the options rows use; an unused default gets none', () => {
   let rule = withDependency(emptyRule('Hospital lights'), 'Typology', order, options);
   for (const [key, option] of [['Office', 'LPD 4.9'], ['Hospital', 'LPD 4.9'], ['School', 'LPD 2.2']]) rule = setOption(rule, key, option);
   assert.deepEqual(usedOptions(rule, options), ['LPD 4.9', 'LPD 2.2']);

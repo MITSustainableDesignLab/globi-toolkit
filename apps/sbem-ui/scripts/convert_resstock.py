@@ -178,7 +178,7 @@ def write_records(db, lookup: dict[str, dict[str, dict[str, str]]]) -> list[dict
         options, skipped = {}, {}
         for option, args in lookup.get(characteristic, {}).items():
             if option == "Void" or option.startswith("Shared"):
-                skipped[option] = "not a modelled option"
+                skipped[option] = "not a modeled option"
                 continue
             values = convert(args, option)
             if isinstance(values, str):

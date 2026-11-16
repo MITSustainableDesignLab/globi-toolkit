@@ -5,7 +5,7 @@
    * Rows are the combinations that occur in the stock, columns are the target's
    * values, and each cell is both a weight input and a heatmap cell -- the blue
    * fill encodes magnitude so the shape of the prior is readable at a glance,
-   * while the number stays editable in place. Cells are always labelled, so the
+   * while the number stays editable in place. Cells are always labeled, so the
    * fill is reinforcement rather than the only encoding.
    *
    * Weights are stored as typed. The sampler renormalizes each row, so a row that
@@ -298,7 +298,7 @@
     font-weight: 600;
   }
 
-  /* A 2px surface gap keeps neighbouring heatmap fills from reading as one block. */
+  /* A 2px surface gap keeps neighboring heatmap fills from reading as one block. */
   .cell {
     min-width: 76px;
     padding: 0;

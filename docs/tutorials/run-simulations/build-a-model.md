@@ -26,7 +26,7 @@ Each part takes about 45 minutes. Part B does not need Part A.
 A few things work the same on every page:
 
 - **Sidebar.** The numbered steps go from top to bottom. A green tick means that the step is ready. **Component Library**, **Single Building**, **Simulations** and **Project Files** are tools below the steps.
-- **Save.** Nothing reaches GloBI until you click **Save** on the page. When everything is saved, the button is grey.
+- **Save.** Nothing reaches GloBI until you click **Save** on the page. When everything is saved, the button is gray.
 - **Help text.** At the bottom of the sidebar, select **Explain** to show a short explanation under each section.
 
 Four words appear often:
@@ -111,7 +111,7 @@ The starter library has one heating system. Build one for direct electric heatin
     The library also has cooling systems, for example `TestRegion_WindowASHP_AirDuctsUninsulated`. A cooling system in a heating row makes every building with that value fail, with `1 validation error for ZoneHVACComponent`. Pick only records whose **ConditioningType** is `Heating`.
 
 5. Go back to **Component Map**. Click **Heating**, then **Varies by…**, then `MAINHEAT`. Select:
-   - **Gas_Radiator** and **Oil_Radiator**: the starter heating system. The two rows get the same colour: they share one component.
+   - **Gas_Radiator** and **Oil_Radiator**: the starter heating system. The two rows get the same color: they share one component.
    - **Electric_Direct**: `Electric_COP1`.
    - **HeatPump**: `HeatPump_COP3`.
 6. Click **Save** at the top right. The app checks all 100 buildings. The top right shows **2 vary · 21 default · ✓ 100 buildings run**.
@@ -289,7 +289,7 @@ Do not compare these results with Part A. All the parts that ResStock does not c
 
     **Fix:** create the project again with the **GloBI starter library** or the ResStock library.
 
-??? problem "**Generate globi files** is grey"
+??? problem "**Generate globi files** is gray"
 
     **Cause:** the component map is not saved.
 

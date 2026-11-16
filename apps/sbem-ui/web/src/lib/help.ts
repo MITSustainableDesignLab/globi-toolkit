@@ -20,7 +20,7 @@ export const HELP = {
     start:
       'Start from whatever you have, in any order. A buildings file gives you characteristics from its columns (GIS Cleaning). If you know what varies but have no data yet, make a part vary by a new characteristic here and bind it to data later. Parts you never touch stay on the archetype and are counted as defaults (assumptions).',
     editor:
-      'Same for every building: one component for the whole stock. Varies by: one row per combination of the characteristics you pick, each with its own component. Rows with the same colour use the same library record, so Office and Hospital can share a lighting record without a copy. Each option is shown by the value that sets it apart (W/m², U-value, COP); hover for its record name.',
+      'Same for every building: one component for the whole stock. Varies by: one row per combination of the characteristics you pick, each with its own component. Rows with the same color use the same library record, so Office and Hospital can share a lighting record without a copy. Each option is shown by the value that sets it apart (W/m², U-value, COP); hover for its record name.',
     construction:
       'By U-value builds a construction from a typical stack for this part (e.g. brick, mineral wool, gypsum for a wall) and sizes the insulation to reach the U-value. Build layers lets you set every layer; the form shows the U-value as you go. U-values are 1/Σ(thickness/conductivity) over the layers, as epinterface reports them.',
   },
@@ -63,7 +63,7 @@ export const HELP = {
     ranges:
       "Each value covers a range of the column, e.g. 0–1974 → pre_1975. Cover the column's whole span with no gaps, so no building falls between bands.",
     mapping:
-      'Pick which value each entry in the column becomes. Group entries by how they behave energetically, not by how they are labelled, and map every entry that occurs: unmapped entries leave buildings without a value.',
+      'Pick which value each entry in the column becomes. Group entries by how they behave energetically, not by how they are labeled, and map every entry that occurs: unmapped entries leave buildings without a value.',
   },
   componentLibrary: {
     page: 'The engineering records (lighting power, infiltration, HVAC efficiency, schedules…) that model parts point to.',
@@ -74,7 +74,7 @@ export const HELP = {
   },
   priorTrees: {
     generate:
-      'Pick what genuinely changes the odds, e.g. heating system by age band. Each one you add multiplies the table rows, so prefer one or two and watch the row count and coverage before adding more. Estimate from data when a column records this for part of the stock; otherwise start from an even split and edit towards published statistics.',
+      'Pick what genuinely changes the odds, e.g. heating system by age band. Each one you add multiplies the table rows, so prefer one or two and watch the row count and coverage before adding more. Estimate from data when a column records this for part of the stock; otherwise start from an even split and edit toward published statistics.',
     order:
       'Estimates are drawn left to right, and one can only depend on those drawn before it, so there can be no loops.',
     preview: 'Draw from the estimates over your own buildings to see what they produce before saving.',

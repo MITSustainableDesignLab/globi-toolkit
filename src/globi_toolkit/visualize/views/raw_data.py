@@ -10,8 +10,8 @@ import pandas as pd
 import streamlit as st
 import streamlit.components.v1 as components
 
-from globi_toolkit.visualise.data_sources import DataSource
-from globi_toolkit.visualise.plotting import (
+from globi_toolkit.visualize.data_sources import DataSource
+from globi_toolkit.visualize.plotting import (
     EnergyIntensityUnit,
     convert_energy_intensity_values,
     create_building_map_deck,
@@ -25,7 +25,7 @@ from globi_toolkit.visualise.plotting import (
     energy_intensity_factor,
     scale_monthly_eui_records,
 )
-from globi_toolkit.visualise.results_data import (
+from globi_toolkit.visualize.results_data import (
     extract_d3_data,
     filter_candidates,
     filter_label,
@@ -34,7 +34,7 @@ from globi_toolkit.visualise.results_data import (
     per_building_metrics,
     portfolio_kpis,
 )
-from globi_toolkit.visualise.utils import (
+from globi_toolkit.visualize.utils import (
     LAT_COL,
     LON_COL,
     build_map_df_and_geometry_from_output,
@@ -45,7 +45,7 @@ from globi_toolkit.visualise.utils import (
     list_numeric_columns,
     read_parquet_sample_for_crs_inference,
 )
-from globi_toolkit.visualise.views.common import (
+from globi_toolkit.visualize.views.common import (
     building_filters,
     cached_load_run_parquet,
     eui_unit,
@@ -363,7 +363,7 @@ def _render_results_map(
     mask: np.ndarray,
     filter_key: str,
 ) -> None:
-    """3D building map coloured by a chosen measure; geometry is cached per run and CRS."""
+    """3D building map colored by a chosen measure; geometry is cached per run and CRS."""
     run_norm = run_label.replace("\\", "/").strip("/")
     if any(seg.lower() == "dryrun" for seg in run_norm.split("/") if seg):
         st.info(
@@ -377,13 +377,13 @@ def _render_results_map(
 
     eui_lbl = energy_intensity_axis_label(eui_unit)
     value_col, cmap, metric_label = st.selectbox(
-        "Colour by",
+        "Color by",
         options=[
             ("eui", "greens", eui_lbl),
             ("total_energy", "viridis", "Annual energy (kWh)"),
             ("peak_per_sqm", "reds", "Peak per m² (kW/m²)"),
             ("total_peak", "plasma", "Peak (kW)"),
-            (None, "viridis", "No colour"),
+            (None, "viridis", "No color"),
         ],
         format_func=lambda x: x[2],
         key="map_metric",
@@ -554,7 +554,7 @@ def _render_generic_rotated_rectangle_map(
     metric_label = "metric"
     if numeric_cols:
         choice = st.selectbox(
-            "Colour by",
+            "Color by",
             options=["(none)", *numeric_cols],
             format_func=lambda x: "(none)" if x == "(none)" else str(x),
             key=f"generic_rr_metric_{safe_key}",

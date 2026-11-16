@@ -7,12 +7,12 @@
  */
 import type { Distribution } from '../types/priorTrees';
 
-/** The key a row gets when it is labelled "Everything else" (the fallback). */
+/** The key a row gets when it is labeled "Everything else" (the fallback). */
 export const FALLBACK_KEY = '__fallback__';
 const FALLBACK_NAMES = new Set(['everything else', 'fallback', 'other', 'else', '*']);
 
 export interface PastedRow {
-  /** The combination's key, FALLBACK_KEY, or null for an unlabelled row. */
+  /** The combination's key, FALLBACK_KEY, or null for an unlabeled row. */
   key: string | null;
   weights: Distribution;
 }
@@ -80,12 +80,12 @@ export function parsePastedOdds(text: string, values: string[], keys: string[] =
 
   const rows: PastedRow[] = [];
   for (const cells of hasHeader ? lines.slice(1) : lines) {
-    const labelled = parseShare(cells[0]) === null;
-    const label = labelled ? cells[0].trim() : null;
+    const labeled = parseShare(cells[0]) === null;
+    const label = labeled ? cells[0].trim() : null;
     const weights: Distribution = Object.fromEntries(values.map((value) => [value, 0]));
     cells.forEach((cell, i) => {
-      if (labelled && i === 0) return;
-      const value = hasHeader ? headerColumns[i] : values[i - (labelled ? 1 : 0)];
+      if (labeled && i === 0) return;
+      const value = hasHeader ? headerColumns[i] : values[i - (labeled ? 1 : 0)];
       const share = parseShare(cell);
       if (value && share !== null) weights[value] = share;
     });

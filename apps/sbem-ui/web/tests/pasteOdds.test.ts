@@ -1,4 +1,4 @@
-// Odds pasted from a spreadsheet: headers, labelled rows, percentages, and what gets skipped.
+// Odds pasted from a spreadsheet: headers, labeled rows, percentages, and what gets skipped.
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
 import { FALLBACK_KEY, parsePastedOdds, parseShare } from '../src/lib/utils/pasteOdds.ts';
@@ -47,7 +47,7 @@ test('a header picks the columns, and labels pick the combinations', () => {
 
 test('rows that add up to 0, or have no label in a table, are skipped with a reason', () => {
   assert.match(parsePastedOdds('0\t0\t0', VALUES).warnings[0], /adds up to 0/);
-  const unlabelled = parsePastedOdds('1\t2\t3', VALUES, ['a.b']);
-  assert.deepEqual(unlabelled.rows, []);
-  assert.match(unlabelled.warnings[0], /without a combination name/);
+  const unlabeled = parsePastedOdds('1\t2\t3', VALUES, ['a.b']);
+  assert.deepEqual(unlabeled.rows, []);
+  assert.match(unlabeled.warnings[0], /without a combination name/);
 });

@@ -60,7 +60,7 @@
   });
 
   function setShape(shape: string) {
-    // keep the centre: start the new shape around the current value
+    // keep the center: start the new shape around the current value
     onChange({ ...defaultSpec(shape as Shape, now), lower: spec.lower ?? null, upper: spec.upper ?? null });
   }
 

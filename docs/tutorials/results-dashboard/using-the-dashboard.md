@@ -27,7 +27,7 @@ Under **Where are the results?** pick one:
 
 | Option                      | Use it when                                                                                                                                                 |
 | --------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Simulation store**        | Your runs went through the GloBI stack. Every finished run is listed, with nothing to download first. The grey badge shows which store you're connected to. |
+| **Simulation store**        | Your runs went through the GloBI stack. Every finished run is listed, with nothing to download first. The gray badge shows which store you're connected to. |
 | **Folder on this computer** | Someone sent you result files, or you fetched them with `get experiment`. Type the folder that holds the run folders (usually `outputs`).                   |
 
 Press **Refresh** when new runs have finished and you want to see them.
@@ -52,7 +52,7 @@ Open **Explore a run** in the sidebar and pick a run from the **Run** list. Runs
 
 ![Explore a run: headline numbers and charts](images/explore.png)
 
-The four numbers at the top summarise the run:
+The four numbers at the top summarize the run:
 
 - **Buildings**: how many buildings are included.
 - **Floor area**: their total heated or cooled floor area.
@@ -78,7 +78,7 @@ Use **Filter buildings** in the sidebar to focus on part of the stock. Floor are
 - **Ranges** such as floor area use a slider. Each step is 5% of the buildings, so you can pick "the smallest quarter" even when a few very large buildings exist.
 - **Categories** such as age bracket use a list. Leave it empty to include everything.
 
-A grey line under the run name tells you how many buildings are left, e.g. _Showing 32 of 100 buildings_, and the headline numbers update:
+A gray line under the run name tells you how many buildings are left, e.g. _Showing 32 of 100 buildings_, and the headline numbers update:
 
 ![The page after filtering to buildings built before 1980](images/explore-filtered.png)
 
@@ -86,13 +86,13 @@ Every number, chart, map and table on the page then uses only those buildings. F
 
 ### Map
 
-The **Map** view shows each building where it stands, coloured by the measure you choose under **Colour by**.
+The **Map** view shows each building where it stands, colored by the measure you choose under **Color by**.
 
-![Buildings on the map, coloured by energy use intensity](images/explore-map.png)
+![Buildings on the map, colored by energy use intensity](images/explore-map.png)
 
 - **Hover** over a building to see its ID and value.
 - **Scroll** to zoom. **Drag** to move. **Right-drag**, or Ctrl-drag, to tilt and rotate the 3D view.
-- The colour bar under the map shows the range of values. Colours stretch from the 5th to the 95th percentile, so a handful of extreme buildings doesn't wash out the rest.
+- The color bar under the map shows the range of values. Colors stretch from the 5th to the 95th percentile, so a handful of extreme buildings doesn't wash out the rest.
 - The caption says how many buildings are on the map, and how many very large buildings (over 10,000 m²) were left off so they don't hide the rest.
 - To save the map, press **Prepare map download**, then **Download map (HTML)**. The file opens in any browser.
 
@@ -126,7 +126,7 @@ Open **Compare scenarios** to see what a retrofit (or any other change) does com
 
 ![Headline numbers for each scenario, with changes against the baseline](images/compare-results.png)
 
-Each scenario gets a row of numbers, and the coloured tags show the change against the baseline. **Green** means lower than the baseline (less energy, cost or emissions); **red** means higher.
+Each scenario gets a row of numbers, and the colored tags show the change against the baseline. **Green** means lower than the baseline (less energy, cost or emissions); **red** means higher.
 
 **Payback (years)** is how many years the yearly energy-cost savings take to repay the system cost. It shows "—" for the baseline, when no system cost is entered, or when a scenario doesn't save money.
 
@@ -139,7 +139,7 @@ Further down the page:
 - With costs switched on, bar charts compare annual energy cost and emissions.
 - **Download charts and data** saves all of these, plus a cost and emissions summary table.
 
-At the bottom, a **Map** shows any scenario. With costs on, you can also colour it by annual energy cost, emissions or system cost.
+At the bottom, a **Map** shows any scenario. With costs on, you can also color it by annual energy cost, emissions or system cost.
 
 ![Map of one scenario](images/compare-map.png)
 
@@ -194,15 +194,15 @@ A run may not include every overheating table. Charts and numbers for a missing 
 
 ### Map: where are the hot buildings?
 
-![Map section: 3D map coloured by degree-hours](images/overheating-map.png)
+![Map section: 3D map colored by degree-hours](images/overheating-map.png)
 
-- **Colour by** chooses the measure: degree-hours, hours above the threshold, or heat-index caution hours. The page-level threshold and room setting apply.
+- **Color by** chooses the measure: degree-hours, hours above the threshold, or heat-index caution hours. The page-level threshold and room setting apply.
 - The **3D building map** works like the one on Explore a run: hover for a building's value, scroll to zoom, right-drag to tilt.
 
 ![Map section: pick a range on the histogram, see those buildings on the plan](images/overheating-map-brush.png)
 
 - **Overview of spatial distribution**: drag the slider to pick a range of values. The histogram highlights that range, and the plan view next to it shows only those buildings, e.g. the worst 10%, to see whether they cluster.
-- When colouring by something other than hours, a second panel below does the same for **total hours above the threshold**.
+- When coloring by something other than hours, a second panel below does the same for **total hours above the threshold**.
 - If every building has the same value (for example, none overheats at a high threshold), the page says so instead of showing a slider. Try a lower temperature.
 
 ### Priority list: which buildings first?

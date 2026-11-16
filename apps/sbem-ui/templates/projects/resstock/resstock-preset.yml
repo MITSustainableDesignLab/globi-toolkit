@@ -73,7 +73,7 @@ characteristics:
     Wood Stud, Uninsulated: resstock_Insulation_Wall_Wood_Stud_Uninsulated
     Wood Stud, Uninsulated, R-5 Sheathing: resstock_Insulation_Wall_Wood_Stud_Uninsulated_R-5_Sheathing
   skipped:
-    Void: not a modelled option
+    Void: not a modeled option
 - name: Insulation Ceiling
   parts:
   - Envelope.Assemblies.AtticFloorAssembly
@@ -128,7 +128,7 @@ characteristics:
     Triple, Low-E, Non-metal, Air, L-Gain: resstock_Windows_Triple_Low-E_Non-metal_Air_L-Gain
   skipped:
     No Windows: no windows
-    Void: not a modelled option
+    Void: not a modeled option
 - name: Infiltration
   parts:
   - Envelope.Infiltration
@@ -218,8 +218,8 @@ characteristics:
     MSHP, SEER 33, 13.3 HSPF, Ducted: resstock_HVAC_Heating_Efficiency_MSHP_SEER_33_13.3_HSPF_Ducted
   skipped:
     None: no heating system
-    Shared Heating: not a modelled option
-    Void: not a modelled option
+    Shared Heating: not a modeled option
+    Void: not a modeled option
 - name: HVAC Cooling Efficiency
   parts:
   - Operations.HVAC.ConditioningSystems.Cooling
@@ -240,7 +240,7 @@ characteristics:
     Ducted Heat Pump: no cooling system of its own
     Non-Ducted Heat Pump: no cooling system of its own
     None: no cooling system of its own
-    Shared Cooling: not a modelled option
+    Shared Cooling: not a modeled option
 - name: Heating Setpoint
   parts:
   - Operations.SpaceUse.Thermostat

@@ -658,7 +658,7 @@
     font-weight: 600;
   }
 
-  /* Rows inside the framed list: no box of their own, a grey pill when open. */
+  /* Rows inside the framed list: no box of their own, a gray pill when open. */
   .item {
     width: 100%;
     display: flex;

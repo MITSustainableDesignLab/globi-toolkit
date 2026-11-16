@@ -2538,7 +2538,7 @@ def _colormap_color(name: str, t: float) -> list[int]:
     return [r, g, b, 160]
 
 
-# sequential colormaps whose lowest colour is near white
+# sequential colormaps whose lowest color is near white
 LIGHT_START_CMAPS = ("greens", "reds")
 
 _MAP_COLOR_LOW_QUANTILE = 0.05
@@ -2607,7 +2607,7 @@ def create_building_map_deck(
         max_buildings: Optional cap for rendered buildings (deterministic sampling).
         max_conditioned_area_m2: optional max conditioned area; larger rows are dropped.
         eui_unit: when value_col is eui, scale from kwh/m² for display.
-        value_label: name of the coloured measure, shown in the hover tooltip.
+        value_label: name of the colored measure, shown in the hover tooltip.
     """
     merged = build_map_df_from_output(
         df, cart_crs=cart_crs, max_buildings=max_buildings
@@ -2743,7 +2743,7 @@ def create_polygon_layer_chart(
         config: Optional configuration for the chart.
         cmap: Colormap name for building colors.
         value_key: Key in feature dict used for color mapping.
-        value_label: Name of the coloured measure, shown in the hover tooltip.
+        value_label: Name of the colored measure, shown in the hover tooltip.
 
     Returns:
         pdk.Deck object ready for rendering.

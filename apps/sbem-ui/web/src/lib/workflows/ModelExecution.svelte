@@ -261,7 +261,7 @@
           <datalist id="weather-files">{#each status.weather as file}<option value={file}></option>{/each}</datalist>
         </fieldset>
         <fieldset class="field">
-          <legend>What will you analyse?</legend>
+          <legend>What will you analyze?</legend>
           <p class="hint">Energy use and peaks are always included. Each choice adds results to batch and sample runs, with settings in the project's <code>use-cases/</code> folder.</p>
           <div class="checks-row">
             {#each status.useCases as useCase}

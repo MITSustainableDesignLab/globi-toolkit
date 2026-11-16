@@ -7,8 +7,8 @@ from pathlib import Path
 
 import streamlit as st
 
-from globi_toolkit.visualise.data_sources import DataSource
-from globi_toolkit.visualise.models import (
+from globi_toolkit.visualize.data_sources import DataSource
+from globi_toolkit.visualize.models import (
     DataSourceConfig,
     LocalDataSourceConfig,
     S3DataSourceConfig,
@@ -88,9 +88,9 @@ def _render_settings() -> None:
     from pyproj import CRS
     from pyproj.exceptions import CRSError
 
-    from globi_toolkit.visualise.plotting import pick_energy_intensity_unit
-    from globi_toolkit.visualise.utils import MAP_POLYGON_CRS_OPTIONS
-    from globi_toolkit.visualise.views.common import AUTO_CRS, CRS_CHOICE_KEY
+    from globi_toolkit.visualize.plotting import pick_energy_intensity_unit
+    from globi_toolkit.visualize.utils import MAP_POLYGON_CRS_OPTIONS
+    from globi_toolkit.visualize.views.common import AUTO_CRS, CRS_CHOICE_KEY
 
     with st.expander("Settings"):
         pick_energy_intensity_unit()

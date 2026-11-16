@@ -2,8 +2,8 @@
 
 The main entry point for the Global Building Inventory (GloBI). It pulls the GloBI
 components together so you can author inputs, run simulations, fetch results, test use
-cases and visualise outputs from one place. The toolkit itself holds glue, not domain
-logic: modelling lives in the engine, data lives in globi-data.
+cases and visualize outputs from one place. The toolkit itself holds glue, not domain
+logic: modeling lives in the engine, data lives in globi-data.
 
 ## How the repos fit together
 
@@ -19,10 +19,10 @@ flowchart LR
   usecases["globi-use-cases<br/>WTP, adoption,<br/>emissions"]
 
   subgraph toolkit["globi-toolkit (this repo)"]
-    cli["globi-toolkit CLI<br/>engine, data, visualise"]
+    cli["globi-toolkit CLI<br/>engine, data, visualize"]
     ui["apps/sbem-ui<br/>authoring app"]
     stack["Docker run stack<br/>Hatchet, workers, localstack"]
-    viz["visualise/<br/>results dashboard"]
+    viz["visualize/<br/>results dashboard"]
     docs["docs/<br/>documentation site"]
   end
 
@@ -55,8 +55,8 @@ back into globi-data with `globi-toolkit data outputs record`.
 | **surrogate** — training config, inference on a whole stock, recording in globi-data | energy modeler | toolkit; training itself stays in the engine | scoped, see [MIGRATION.md](MIGRATION.md) |
 | **validate** — against metered data, calibration | all | `globi.validation`, globi-uk-calibration | later |
 | **fetch** — versioned inputs, result and surrogate URIs | all | [globi-data](https://github.com/MITSustainableDesignLab/globi-data) | dependency |
-| **analyse** — WTP, adoption, emissions | sustainability champion | [globi-use-cases](https://github.com/daryaguettler/globi-use-cases) | planned (needs a proper package) |
-| **visualise** | sustainability champion | results dashboard, in `src/globi_toolkit/visualise/` | in this repo |
+| **analyze** — WTP, adoption, emissions | sustainability champion | [globi-use-cases](https://github.com/daryaguettler/globi-use-cases) | planned (needs a proper package) |
+| **visualize** | sustainability champion | results dashboard, in `src/globi_toolkit/visualize/` | in this repo |
 
 The documentation site lives here too (`make docs`); see [MIGRATION.md](MIGRATION.md) for what moved from the engine.
 

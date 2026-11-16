@@ -51,7 +51,7 @@
     if (!$libraryCheck) void runLibraryCheck();
   });
 
-  /** One colour per component a part uses, in the same order its editor shows them. */
+  /** One color per component a part uses, in the same order its editor shows them. */
   function swatches(rule: PartRule | undefined): string[] {
     return rule ? usedOptions(rule, options).map((_, i) => `var(--series-${(i % 8) + 1})`) : [];
   }
@@ -160,7 +160,7 @@
                     {:else if status[path] === 'assumed'}
                       <span class="swatch hollow"></span>
                     {:else}
-                      {#each swatches(rule).slice(0, 8) as colour}<span class="swatch" style:background={colour}></span>{/each}
+                      {#each swatches(rule).slice(0, 8) as color}<span class="swatch" style:background={color}></span>{/each}
                     {/if}
                     {#if uncertainPart(path, rule)}<span class="uncertain" title="Uses an uncertain component"><Icon name="bell-curve" size={14} /></span>{/if}
                   </span>

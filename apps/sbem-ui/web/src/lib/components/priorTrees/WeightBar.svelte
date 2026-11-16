@@ -2,7 +2,7 @@
   /**
    * One distribution as a 100% stacked bar. Segments carry a 2px surface gap so
    * adjacent hues never touch, and every segment wide enough to hold text is
-   * labelled directly -- identity is never left to color alone.
+   * labeled directly -- identity is never left to color alone.
    */
   import type { Distribution } from '../../types/priorTrees';
   import { distributionTotal, formatShare, moveBoundary, toSegments } from '../../utils/priorViz';
@@ -10,7 +10,7 @@
   export let distribution: Distribution;
   export let order: string[] = [];
   export let showLegend = true;
-  /** Given, the bar is editable: drag (or arrow-key) a boundary to move weight between its two neighbours. */
+  /** Given, the bar is editable: drag (or arrow-key) a boundary to move weight between its two neighbors. */
   export let onChange: ((distribution: Distribution) => void) | null = null;
 
   let track: HTMLDivElement;
@@ -90,7 +90,7 @@
     {/each}
   {/if}
   </div>
-  {#if onChange}<p class="drag-hint">Drag a boundary (or focus it and use the arrow keys) to move weight between neighbours.</p>{/if}
+  {#if onChange}<p class="drag-hint">Drag a boundary (or focus it and use the arrow keys) to move weight between neighbors.</p>{/if}
 
   {#if showLegend && segments.length > 0}
     <ul class="legend">

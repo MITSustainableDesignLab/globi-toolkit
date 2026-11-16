@@ -174,7 +174,7 @@ export const TUTORIAL_STEPS: TutorialStep[] = [
     id: 'map-rows',
     workflow: 'model-parts',
     title: 'Pick a component for each value',
-    body: 'Click each row’s component and pick one from the library, or build one (By U-value, Build layers). Rows with the same colour share one component, so you only build what differs.',
+    body: 'Click each row’s component and pick one from the library, or build one (By U-value, Build layers). Rows with the same color share one component, so you only build what differs.',
     targets: ['part-rows'],
   },
   {

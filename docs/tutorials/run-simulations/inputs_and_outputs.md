@@ -469,7 +469,7 @@ make results-native export -- outputs/Demo/Baseline/v1.0.0 --granularity annual 
 
 CSV and Excel files have one header row (for example `Energy.End Uses.Heating`) and keep every row label, such as the building and the zone, as a column.
 
-Hourly files exist only for runs set up for them. In sbem-ui, go to **Model Execution → What will you analyse?** and tick **Hourly room conditions** (or **Overheating** for the overheating tables) before you generate the run files. The settings go into the project's `use-cases/` folder, where you can edit them. Hourly *energy* is not available yet: GloBI computes it, but keeps only the monthly totals and peaks.
+Hourly files exist only for runs set up for them. In sbem-ui, go to **Model Execution → What will you analyze?** and tick **Hourly room conditions** (or **Overheating** for the overheating tables) before you generate the run files. The settings go into the project's `use-cases/` folder, where you can edit them. Hourly *energy* is not available yet: GloBI computes it, but keeps only the monthly totals and peaks.
 
 ---
 

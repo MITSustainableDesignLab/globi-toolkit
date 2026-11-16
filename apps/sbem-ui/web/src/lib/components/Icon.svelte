@@ -1,5 +1,5 @@
 <script lang="ts" module>
-  // Outline icons on a 24-unit grid; path data from Lucide (ISC licence, lucide.dev).
+  // Outline icons on a 24-unit grid; path data from Lucide (ISC license, lucide.dev).
   const PATHS = {
     check: ['M20 6 9 17l-5-5'],
     x: ['M18 6 6 18', 'm6 6 12 12'],

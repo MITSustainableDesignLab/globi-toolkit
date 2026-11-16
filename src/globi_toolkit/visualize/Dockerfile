@@ -28,10 +28,10 @@ RUN uv run --no-sync epi prisma generate
 COPY src /code/src/
 COPY apps/sbem-ui/lib /code/apps/sbem-ui/lib/
 
-COPY src/globi_toolkit/visualise/config.toml /code/.streamlit/config.toml
+COPY src/globi_toolkit/visualize/config.toml /code/.streamlit/config.toml
 
 RUN uv sync --locked --no-dev
 
 
 # --no-sync: the image is already synced (without dev tools); don't re-sync at start-up
-CMD [ "uv", "run", "--no-sync", "streamlit", "run", "src/globi_toolkit/visualise/main.py" ]
+CMD [ "uv", "run", "--no-sync", "streamlit", "run", "src/globi_toolkit/visualize/main.py" ]

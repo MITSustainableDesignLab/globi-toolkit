@@ -73,7 +73,7 @@ export function shapeInfo(shape: Shape): ShapeInfo {
 
 const round = (value: number) => Number(value.toPrecision(3));
 
-/** A curve of `shape` centred on a component's current `value` (±20%), to start editing from. */
+/** A curve of `shape` centered on a component's current `value` (±20%), to start editing from. */
 export function defaultSpec(shape: Shape, value: number | null): CurveSpec {
   const v = value && Number.isFinite(value) && value !== 0 ? value : 1;
   const lo = round(Math.min(0.8 * v, 1.2 * v));

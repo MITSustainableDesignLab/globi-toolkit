@@ -13,8 +13,8 @@ import pandas as pd
 import streamlit as st
 import streamlit.components.v1 as components
 
-from globi_toolkit.visualise.data_sources import DataSource
-from globi_toolkit.visualise.plotting import (
+from globi_toolkit.visualize.data_sources import DataSource
+from globi_toolkit.visualize.plotting import (
     Theme,
     convert_energy_intensity_values,
     create_binned_bar_d3_html,
@@ -32,8 +32,8 @@ from globi_toolkit.visualise.plotting import (
     energy_intensity_axis_label,
     energy_intensity_factor,
 )
-from globi_toolkit.visualise.results_data import filter_mask
-from globi_toolkit.visualise.utils import (
+from globi_toolkit.visualize.results_data import filter_mask
+from globi_toolkit.visualize.utils import (
     BUILDING_ID_COL,
     build_building_area_df,
     build_consecutive_exceedances_building_df,
@@ -52,19 +52,19 @@ from globi_toolkit.visualise.utils import (
     sample_overheating_fan_payload,
     threshold_sensitivity_from_wide,
 )
-from globi_toolkit.visualise.views.common import (
+from globi_toolkit.visualize.views.common import (
     building_filters,
     load_run,
     resolve_map_crs,
     run_label,
 )
-from globi_toolkit.visualise.views.common import (
+from globi_toolkit.visualize.views.common import (
     eui_unit as current_eui_unit,
 )
-from globi_toolkit.visualise.views.common import (
+from globi_toolkit.visualize.views.common import (
     render_colormap_legend as _render_colormap_legend,
 )
-from globi_toolkit.visualise.views.common import (
+from globi_toolkit.visualize.views.common import (
     streamlit_theme as _streamlit_theme,
 )
 
@@ -284,7 +284,7 @@ def _build_overheating_geometry_cache(
     _map_df: pd.DataFrame,
 ):
     """Geometry from map_df; _map_df excluded from key, so the other args (incl. filters) must identify it."""
-    from globi_toolkit.visualise.utils import build_map_features_from_df
+    from globi_toolkit.visualize.utils import build_map_features_from_df
 
     return build_map_features_from_df(_map_df, cart_crs=cart_crs, value_col=None)
 
@@ -880,7 +880,7 @@ def _render_tab_portfolio(  # noqa: C901
                         None,
                     ),
                     (
-                        "**Step 3 — Zone Weighted** mean HI per hour, then categorised:",
+                        "**Step 3 — Zone Weighted** mean HI per hour, then categorized:",
                         None,
                     ),
                     (None, _FORMULA_HI_ZW),
@@ -930,7 +930,7 @@ def _render_geo_flat_map(
 ) -> None:
     """Render the plan-view flat footprint map for the selected buildings.
 
-    If fill_color is provided, all buildings are drawn in that single RGBA colour
+    If fill_color is provided, all buildings are drawn in that single RGBA color
     (no colormap gradient). With cached geometry (features carrying building_id),
     the selection is picked from it instead of re-parsing footprints on every move.
     """
@@ -967,7 +967,7 @@ def _render_geo_flat_map(
         st.pydeck_chart(flat_deck)
         label = f"{flat_n} buildings shown - {metric_label}"
         if fill_color is None:
-            label += " (coloured by value)"
+            label += " (colored by value)"
         st.caption(label)
     else:
         st.info(
@@ -1003,7 +1003,7 @@ def _render_tab_geography(  # noqa: C901
         return
 
     chosen = st.selectbox(
-        "Colour by",
+        "Color by",
         options=[o[0] for o in metric_options],
         format_func=lambda x: next(label for key, label in metric_options if key == x),
         key="geo_tab_metric",
@@ -1074,7 +1074,7 @@ def _render_tab_geography(  # noqa: C901
             map_df,
         )
     else:
-        from globi_toolkit.visualise.utils import build_map_features_from_df
+        from globi_toolkit.visualize.utils import build_map_features_from_df
 
         geometry_cache = build_map_features_from_df(
             map_df, cart_crs=cart_crs, value_col=None
@@ -1524,7 +1524,7 @@ def _render_tab_correlations(  # noqa: C901
 
         if cat_cols:
             # Join EDH values onto buildings_df — resolve join key same way as numeric trellis
-            from globi_toolkit.visualise.utils import (
+            from globi_toolkit.visualize.utils import (
                 _resolve_buildings_join_key,
             )
 
@@ -1808,7 +1808,7 @@ def _render_tab_correlations(  # noqa: C901
     if multi is not None and not multi.empty:
         with st.expander("Parallel coordinates", expanded=False):
             st.caption(
-                "Each line is one building. Lines are coloured by EDH zone-weighted percentile "
+                "Each line is one building. Lines are colored by EDH zone-weighted percentile "
                 "(cool = low, warm = high). Useful for identifying multivariate patterns."
             )
             pc_cols = [

@@ -4,7 +4,7 @@ services:
     image: globi-visualizer:local
     build:
       context: .
-      dockerfile: src/globi_toolkit/visualise/Dockerfile
+      dockerfile: src/globi_toolkit/visualize/Dockerfile
       args:
         - PYTHON_VERSION=${PYTHON_VERSION:-3.12}
     env_file:

@@ -2445,7 +2445,7 @@ def build_eui_vs_edh_df(
     energy_path = get_pq_file_for_run(run_dir)
     if energy_path is None:
         return None
-    from globi_toolkit.visualise.results_data import per_building_metrics
+    from globi_toolkit.visualize.results_data import per_building_metrics
 
     energy_df = load_output_table(energy_path)
     # EUI needs no footprints, so don't parse geometry (or depend on the map CRS) here

@@ -1,14 +1,14 @@
 # Results dashboard: setup and reference
 
-How to run the dashboard and how it computes what it shows. For a walk-through of the pages, see [Using the dashboard](using-the-dashboard.md). The code lives in `src/globi_toolkit/visualise/`.
+How to run the dashboard and how it computes what it shows. For a walk-through of the pages, see [Using the dashboard](using-the-dashboard.md). The code lives in `src/globi_toolkit/visualize/`.
 
 ## Running it
 
 | Command                                                      | What it does                                                                                                              |
 | ------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------- |
 | `make viz-native`                                            | Runs on your machine. Loads `.env.$(AWS_ENV).aws` (default `local.host`, i.e. the local stack) and `.env.scythe.storage`. |
-| `make viz`                                                   | Runs in Docker, with `src/globi_toolkit/visualise/config.toml` as the Streamlit config.                                     |
-| `uv run globi-toolkit visualise`                             | Runs directly; you set the environment variables yourself.                                                                |
+| `make viz`                                                   | Runs in Docker, with `src/globi_toolkit/visualize/config.toml` as the Streamlit config.                                     |
+| `uv run globi-toolkit visualize`                             | Runs directly; you set the environment variables yourself.                                                                |
 
 The dashboard is served at <http://localhost:8501>. Both Streamlit configs (`.streamlit/config.toml` for native runs, the one above for Docker) set `toolbarMode = "viewer"`, which hides Streamlit's developer toolbar from users.
 
@@ -27,7 +27,7 @@ Shared widgets (filters, headline numbers, run labels, downloads, the map legend
 
 The sidebar's **Settings** box holds two settings that apply to every page:
 
-- **Energy intensity units**: kWh/m² or kBTU/ft² for EUI everywhere (headline numbers, charts, map colours, tables).
+- **Energy intensity units**: kWh/m² or kBTU/ft² for EUI everywhere (headline numbers, charts, map colors, tables).
 - **Map coordinate system**: the projected CRS of the footprints. **Automatic** (default) uses `infer_rotated_rectangle_crs_hint`, which tries a list of common CRSs on a sample of footprints and picks the one that places them cleanly. Users can pick a CRS from that list or type any EPSG code under **Other…**. Each map's caption says which CRS it used.
 
 ## Units

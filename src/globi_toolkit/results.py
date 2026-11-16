@@ -24,7 +24,7 @@ Format = Literal["pq", "csv", "xlsx"]
 
 NO_HOURLY = (
     "This run has no hourly files. In sbem-ui, tick Hourly room conditions under "
-    "Model Execution → What will you analyse?, generate the files and run again."
+    "Model Execution → What will you analyze?, generate the files and run again."
 )
 
 
@@ -34,8 +34,8 @@ def fetch_run(run: str, dest: Path) -> Path:
     `run` is a run name ("Demo/Baseline") or a run id with its version
     ("Demo/Baseline/v1.0.0"). Reads the bucket from the scythe storage settings.
     """
-    from globi_toolkit.visualise.data_sources import S3DataSource
-    from globi_toolkit.visualise.models import S3DataSourceConfig
+    from globi_toolkit.visualize.data_sources import S3DataSource
+    from globi_toolkit.visualize.models import S3DataSourceConfig
 
     source = S3DataSource(S3DataSourceConfig(cache_dir=dest))
     run = run.strip("/")

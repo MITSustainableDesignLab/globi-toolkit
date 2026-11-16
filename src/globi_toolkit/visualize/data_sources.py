@@ -11,12 +11,12 @@ from typing import TYPE_CHECKING
 import pandas as pd
 from scythe.settings import ScytheStorageSettings
 
-from globi_toolkit.visualise.models import (
+from globi_toolkit.visualize.models import (
     DataSourceConfig,
     LocalDataSourceConfig,
     S3DataSourceConfig,
 )
-from globi_toolkit.visualise.utils import (
+from globi_toolkit.visualize.utils import (
     build_overheating_map_df,
     build_overheating_summary_df,
     build_overheating_threshold_curves_df,

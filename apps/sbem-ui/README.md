@@ -146,11 +146,11 @@ data or from component values: a new project already runs, and each step refines
    are written into `semantic-fields.yaml` on every save.
 3. **Component Map**. One card per part of the model (walls, windows, heating, lighting, ...),
    each starting on the template library's archetype, so the whole stock already simulates as
-   one building type. A card's swatches are the components it uses, one colour per library
+   one building type. A card's swatches are the components it uses, one color per library
    record; a dashed swatch is a part nobody has decided yet. Click a card to open it: **Same for
    every building**, or **Varies by…** one or more characteristics (from your GIS columns, or
    typed here with **New** and bound to data later). Each row shows its component by the value
-   that sets it apart (W/m², U-value, COP…); rows with the same colour share one record, so
+   that sets it apart (W/m², U-value, COP…); rows with the same color share one record, so
    Office and Hospital can use one lighting record. A construction can be made **By U-value**
    (a typical stack with the insulation sized to reach it) or with **Build layers**, which shows
    the U-value as you go. **Save** writes `part-rules.yaml` and compiles it into
@@ -161,7 +161,7 @@ data or from component values: a new project already runs, and each step refines
 4. **Retrofits**. Bundle measures into packages, such as "oil boiler to heat pump where
    built before 1975". Each package is compared against the baseline. Use **Never
    downgrade** to order a characteristic's values from worst to best, so measures only
-   move buildings towards the better values. With part rules, packages compile into a
+   move buildings toward the better values. With part rules, packages compile into a
    generated `Scenario` characteristic (Baseline plus one value per package): a group whose
    parts depend on a changed characteristic gets rows for each package, and globi sets
    `Scenario` from each manifest.

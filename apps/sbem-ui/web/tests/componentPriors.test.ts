@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import { test } from 'node:test';
 import { SHAPES, defaultSpec, insulated, keyField, parseList, parsePairs, priorFor, uninsulatedSpec, withPrior } from '../src/lib/utils/componentPriors.ts';
 
-test('every shape starts with all its parameters, centred on the current value', () => {
+test('every shape starts with all its parameters, centered on the current value', () => {
   for (const shape of SHAPES) {
     const spec = defaultSpec(shape.id, 0.3);
     for (const param of shape.params) assert.ok(spec[param.key] !== undefined, `${shape.id} lacks ${param.key}`);
